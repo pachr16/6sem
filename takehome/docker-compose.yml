@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  proxy:
+    build: .    # change to building from image after upload to dockerhub, this is for dev work
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  jserver:
+    build: ./Java/
+#  web:
+#    image: httpd  # this will use httpd:latest
