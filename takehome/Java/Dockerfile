@@ -6,6 +6,6 @@ COPY . /usr/src/myapp
 
 WORKDIR /usr/src/myapp
 
-RUN javac -sourcepath pas/ -cp "/jar/mysql-connector-java-8.0.19.jar" pas/*.java
+RUN javac -sourcepath pas/ -cp "/pas/jar/mysql-connector-java-8.0.19.jar" pas/*.java
 
 CMD ["java", "pas/Backend"]

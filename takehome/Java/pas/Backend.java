@@ -1,9 +1,14 @@
 package pas;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Scanner;
+
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
@@ -12,9 +17,6 @@ import com.sun.net.httpserver.HttpExchange;
 public class Backend {
 
    protected static DbHandler db;
-
-   //name of nginx service
-  protected static String PROXY = "127.0.0.1";
   
     public static void main(String[] args) throws IOException {
         InetAddress ip = (InetAddress) InetAddress.getByName("0.0.0.0");
@@ -27,16 +29,17 @@ public class Backend {
         server.start();
     }
 
-    static class Handler implements HttpHandler {
+    static class Handler implements HttpHandler {      
+
         @Override
         public void handle(HttpExchange he) throws IOException {
             String retBody = "";
 
             switch (he.getRequestMethod()) {
                 case "GET":
-                    //List<Person> persons = db.getAllPersons();
-                    //String json = "[";
-                    /*for (int i = 0; i < persons.size(); i++) {
+                    List<Person> persons = db.getAllPersons();
+                    String json = "[";
+                    for (int i = 0; i < persons.size(); i++) {
                     json += "{\"id\":";
                     json += persons.get(i).getId();
                     json += ",\"firstname\":";
@@ -48,25 +51,33 @@ public class Backend {
                     json += ",";
                     }
                     }
-                    json += "]";*/
+                    json += "]";
    
-                    //retBody = json;
+                    retBody = json;
                     
-                    System.out.println("WE ARE IN A GET CASE!");
-                    retBody = "WE ARE IN A GET CASE!";
                     he.sendResponseHeaders(200, retBody.getBytes().length);
                     break;
                     
                 case "POST":
-                    retBody = "we got POST";
-                    he.sendResponseHeaders(200, retBody.getBytes().length);
+
+                    Scanner scan  = new Scanner(he.getRequestBody()).useDelimiter("&");
+
+                    Person pers = new Person();
+
+                    while(scan.hasNext()) {
+                        String next = scan.next();
+                        if(next.contains("firstname=")) {
+                            pers.setFName(next.split("=", 2)[1]);
+                        } else if(next.contains("lastname=")){
+                            pers.setLName(next.split("=", 2)[1]);
+                        }
+                    }
+
+                    //retBody = "WE ARE IN A POST CASE!";
+
+                    he.sendResponseHeaders(200, 0);
                     
-                    System.out.println("WE ARE IN A POST CASE!");
-                    retBody = "WE ARE IN A POST CASE!";
-                    
-                    System.out.println(he.getRequestBody().toString());
-                    
-                    //db.insertPerson(new Person(0, "Patrick", "Test"));
+                    db.insertPerson(pers);
                     
                     break;
                     

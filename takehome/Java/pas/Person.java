@@ -9,6 +9,9 @@ public class Person {
             this.fname = fname;
             this.lname = lname;
         }
+        public Person() {
+            this.id = -1;
+        }
         
         public String getFName() {
             return this.fname;
@@ -21,4 +24,13 @@ public class Person {
         public int getId() {
             return this.id;
         }
+
+        public void setFName(String fname) {
+            this.fname = fname;
+        }
+
+        public void setLName(String lname) {
+            this.lname = lname;
+        }
+        
     }

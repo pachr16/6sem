@@ -9,7 +9,10 @@
 
 $(document).ready(function(){
 
-	$.getJSON('http://192.168.99.100/getPersons', function(data) {
+
+	//use IP for toolbox: 192.168.99.100
+	//Use IP for Desktop/Linux: localhost
+	$.getJSON('http://localhost/getPersons', function(data) {
 		console.log("ookok");
         console.log(data.toString());  
 	});

@@ -5,6 +5,8 @@
 <script>
 $(document).ready(function(){
 
+	//use IP for toolbox: 192.168.99.100
+	//Use IP for Desktop/Linux: localhost
 	$.getJSON('https://192.168.99.100/getPersons', function(data) {
 	      var table='<table border="1">';
 	      /* loop over each object in the array to create rows*/
