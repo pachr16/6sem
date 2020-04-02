@@ -8,7 +8,7 @@ const api = express();
 
 api.get('/getTrack', (req, res, err) => {
   // generate file path
-  const filePath = path.resolve(__dirname, './html', './assets', req.query.songName + '.mp4');
+  const filePath = path.resolve(__dirname, './html', './assets/music/', req.query.songName + '.mp3');
   // get file size info
   const stat = fileSystem.statSync(filePath);
 
@@ -47,7 +47,7 @@ io.on('connection', client => {
   const stream = ss.createStream();
 
   client.on('getTrack', () => {
-    const filePath = path.resolve(__dirname, './html','./assets', req.query.songName + '.mp4');
+    const filePath = path.resolve(__dirname, './html','./assets/music/', req.query.songName + '.mp3');
     const stat = fileSystem.statSync(filePath);
     const readStream = fileSystem.createReadStream(filePath);
     // pipe stream with response stream

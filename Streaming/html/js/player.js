@@ -13,29 +13,69 @@ thumbnails = ['./assets/images/lemonade.png', './assets/images/dontstartnow.png'
 songArtists = ['Beyonce', 'Dua Lipa']; // object storing track artists
 songTitles = ["Don't Hurt Yourself", "Don't Start Now"]; // object storing track titles
 
+let url = x; //address for server
+let source = null;
+let playing = false;
+let startedAt = 0;
+let pausedAt = 0;
+
+function playSong(songName){
+    const response = await fetch(url + '/getTrack?songName=' + songName, {responseType: 'arraybuffer', });
+
+    // create audio context
+    const audioContext = getAudioContext();
+    // create audioBuffer (decode audio file)
+    const audioBuffer = await audioContext.decodeAudioData(response.data);
+   
+    // create audio source
+    source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+   
+    // play audio
+    source.start();
+    startedAt = Date.now();
+    playing = true;
+}
+
+function getAudioContext() {
+    AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioContent = new AudioContext();
+    return audioContent;
+}
+
 // function where pp (play-pause) element changes based on playing boolean value - if play button clicked, change pp.src to pause button and call song.play() and vice versa.
-let playing = true;
+
 function playPause() {
-    if (playing) {
+    if(source == null) {
+        playSong("beyonce");
+    } else if (playing) {
         const song = document.querySelector('#song'),
         thumbnail = document.querySelector('#thumbnail');
 
         pPause.src = "./assets/icons/pause.png"
         thumbnail.style.transform = "scale(1.15)";
         
-        song.play();
+        source.stop();
+        pausedAt = Date.now() - startedAt;
         playing = false;
     } else {
         pPause.src = "./assets/icons/play.png"
         thumbnail.style.transform = "scale(1)"
         
-        song.pause();
+        source.start();
+        startedAt = Date.now() - pausedAt;
+        source.start(0, audioState.pausedAt / 1000);
         playing = true;
     }
 }
 
+source.addEventListener('ended', function() {
+    source = null;
+});
+
 // automatically play the next song at the end of the audio object's duration
-song.addEventListener('ended', function(){
+song.addEventListener('ended', function() {
     nextSong();
 });
 
