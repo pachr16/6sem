@@ -13,7 +13,7 @@ thumbnails = ['./assets/images/lemonade.png', './assets/images/dontstartnow.png'
 songArtists = ['Beyonce', 'Dua Lipa']; // object storing track artists
 songTitles = ["Don't Hurt Yourself", "Don't Start Now"]; // object storing track titles
 
-let url = x; //address for server
+let url = 'localhost:2000'; //address for server
 let source = null;
 let playing = false;
 let startedAt = 0;
