@@ -4,9 +4,9 @@ const express = require('express');
 const ss = require('socket.io-stream');
 const path = require('path');
 const app = express();
-const api = express();
+//const api = express();
 
-api.get('/getTrack', (req, res, err) => {
+/* api.get('/getTrack', (req, res, err) => {
   // generate file path
   const filePath = path.resolve(__dirname, './html', './assets/music/', req.query.songName + '.mp3');
   // get file size info
@@ -21,10 +21,10 @@ api.get('/getTrack', (req, res, err) => {
   const readStream = fileSystem.createReadStream(filePath);
   // attach this stream with response stream
   readStream.pipe(res);
-});
+}); */
 
 //register api calls
-app.use('/api/v1/', api);
+//app.use('/api/v1/', api);
 
 /* send react app on / GET
 app.use(express.static(path.resolve(__dirname, './public/build/')));
@@ -47,6 +47,8 @@ io.on('connection', client => {
   const stream = ss.createStream();
 
   client.on('getTrack', () => {
+    console.log("Server: getTrack entered");
+    console.log(req.query.sonName);
     const filePath = path.resolve(__dirname, './html','./assets/music/', req.query.songName + '.mp3');
     const stat = fileSystem.statSync(filePath);
     const readStream = fileSystem.createReadStream(filePath);

@@ -13,13 +13,20 @@ thumbnails = ['./assets/images/lemonade.png', './assets/images/dontstartnow.png'
 songArtists = ['Beyonce', 'Dua Lipa']; // object storing track artists
 songTitles = ["Don't Hurt Yourself", "Don't Start Now"]; // object storing track titles
 
-let url = 'localhost:2000'; //address for server
+let url = 'http://localhost:2000'; //address for server
 let source = null;
 let playing = false;
 let startedAt = 0;
 let pausedAt = 0;
 
-function playSong(songName){
+window.onload =() => {
+    document.getElementById("play-pause").addEventListener("click", () => {
+        playPause();
+    });
+}
+
+async function playSong(songName){
+    console.log("playSong Entered");
     const response = await fetch(url + '/getTrack?songName=' + songName, {responseType: 'arraybuffer', });
 
     // create audio context
