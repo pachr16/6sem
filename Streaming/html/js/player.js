@@ -13,49 +13,27 @@ thumbnails = ['./assets/images/lemonade.png', './assets/images/dontstartnow.png'
 songArtists = ['Beyonce', 'Dua Lipa']; // object storing track artists
 songTitles = ["Don't Hurt Yourself", "Don't Start Now"]; // object storing track titles
 
+
 let url = 'http://localhost:2000'; //address for server
 let source = null;
 let playing = false;
 let startedAt = 0;
 let pausedAt = 0;
 
+
+
 window.onload =() => {
     document.getElementById("play-pause").addEventListener("click", () => {
         playPause();
     });
-}
 
-async function playSong(songName){
-    console.log("playSong Entered");
-    const response = await fetch(url + '/getTrack?songName=' + songName, {responseType: 'arraybuffer', });
-
-    // create audio context
-    const audioContext = getAudioContext();
-    // create audioBuffer (decode audio file)
-    const audioBuffer = await audioContext.decodeAudioData(response.data);
-   
-    // create audio source
-    source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-   
-    // play audio
-    source.start();
-    startedAt = Date.now();
-    playing = true;
-}
-
-function getAudioContext() {
-    AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContent = new AudioContext();
-    return audioContent;
 }
 
 // function where pp (play-pause) element changes based on playing boolean value - if play button clicked, change pp.src to pause button and call song.play() and vice versa.
 
-function playPause() {
-    if(source == null) {
-        playSong("beyonce");
+async function playPause() {
+    if(true) {
+        miscStartStream("beyonce");
     } else if (playing) {
         const song = document.querySelector('#song'),
         thumbnail = document.querySelector('#thumbnail');

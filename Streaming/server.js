@@ -34,14 +34,20 @@ app.get('*', (req, res) => {
 });
 */
 
-const server = http.createServer(app);
-const io = require('socket.io').listen(server, {
-  log: false,
-  agent: false,
-  origins: '*:*',
-  transports: ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling', 'polling']
-});
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 
+app.get('/test', function(req,res){
+  console.log("get metod activate!")
+})
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+/*
 io.on('connection', client => {
 
   const stream = ss.createStream();
@@ -59,7 +65,8 @@ io.on('connection', client => {
   });
   client.on('disconnect', () => {});
 });
-
-server.listen(process.env.PORT || '2000', function () {
+*/
+server.listen(2000, function(){
+//server.listen(process.env.PORT || '2000', function () {
   console.log('Server app listening on port 2000!');
 });
