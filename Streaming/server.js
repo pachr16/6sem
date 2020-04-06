@@ -41,7 +41,17 @@ app.get('/test', function(req,res){
   console.log("get metod activate!")
 })
 
-io.on('connection', function(socket){
+io.on('connection', client => {
+  const stream = ss.createStream();
+  client.on('streamSong',(data) => {
+    const filePath = path.resolve(__dirname, './html', './assets', data + '.mp3');
+    const stat = fileSystem.statSync(filePath);
+    const readStream = fileSystem.createReadStream(filePath);
+
+    readStream.pipe(stream);
+    ss(client).emit('song-stream', stream, {stat});
+  })
+
   console.log('a user connected');
   socket.on('disconnect', function(){
     console.log('user disconnected');
