@@ -16,6 +16,7 @@ async function miscStartStream(songname) {
             socket.emit('streamSong', songname, () => { });
             ss(socket).on('song-stream', (stream, { stat }) => {
                 stream.on('data', async (data) => {
+                    var audioContext = getAudioContext();
                     const audioBufferChunk = await audioContext.decodeAudioData(data);
                     source = audioContext.createBufferSource();
                     source.buffer = audioBufferChunk;
