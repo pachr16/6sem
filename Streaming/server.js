@@ -45,7 +45,7 @@ io.on('connection', client => {
   const stream = ss.createStream();
   client.on('streamSong', (data) => {
     console.log("recived" + data + "from client")
-    const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.mp3');
+    const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
     const stat = fileSystem.statSync(filePath);
     const readStream = fileSystem.createReadStream(filePath);
 
