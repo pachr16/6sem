@@ -35,7 +35,7 @@ app.get('*', (req, res) => {
 */
 
 var server = http.createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
 
 app.get('/test', function(req,res){
   console.log("get metod activate!")
@@ -43,8 +43,9 @@ app.get('/test', function(req,res){
 
 io.on('connection', client => {
   const stream = ss.createStream();
-  client.on('streamSong',(data) => {
-    const filePath = path.resolve(__dirname, './html', './assets', data + '.mp3');
+  client.on('streamSong', (data) => {
+    console.log("recived" + data + "from client")
+    const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.mp3');
     const stat = fileSystem.statSync(filePath);
     const readStream = fileSystem.createReadStream(filePath);
 
@@ -53,9 +54,9 @@ io.on('connection', client => {
   })
 
   console.log('a user connected');
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+  //socket.on('disconnect', function(){
+    //console.log('user disconnected');
+ // });
 });
 /*
 io.on('connection', client => {
