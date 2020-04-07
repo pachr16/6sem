@@ -32,7 +32,7 @@ async function miscStartStream(songname) {
                    
 
                     //const duration = (100/loadRate) * audioBufferChunk.duration;
-                })
+                });
             });
         });
 
@@ -55,7 +55,7 @@ async function miscStartStream(songname) {
 }
 */
     function getAudioContext() {
-        AudioContext = window.AudioContext || window.webkitAudioContext;
+        AudioContext = window.AudioContext || window.webkitAudioContext;    // for cross-browser support (?)
         const audioContent = new AudioContext();
         return audioContent;
     }

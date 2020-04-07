@@ -38,20 +38,21 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 app.get('/test', function(req,res){
-  console.log("get metod activate!")
-})
+  console.log("get method activate!")
+});
 
 io.on('connection', client => {
-  const stream = ss.createStream();
   client.on('streamSong', (data) => {
-    console.log("recived" + data + "from client")
+    console.log("received" + data + "from client")
     const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
     const stat = fileSystem.statSync(filePath);
     const readStream = fileSystem.createReadStream(filePath);
 
+    const stream = ss.createStream();
     readStream.pipe(stream);
     ss(client).emit('song-stream', stream, {stat});
-  })
+    //stream.destroy();   maybe????
+  });
 
   console.log('a user connected');
   //socket.on('disconnect', function(){
