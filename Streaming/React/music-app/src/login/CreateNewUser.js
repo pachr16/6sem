@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 
 function createUser() {
 
-    if (document.getElementById('unameField').value == "" ||
-        document.getElementById('emailField').value == "" ||
-        document.getElementById('passField').value == "") {
+    if (document.getElementById('unameField').value === "" ||
+        document.getElementById('emailField').value === "" ||
+        document.getElementById('passField').value === "") {
 
         document.getElementById('responseText').innerHTML = "Please fill in all fields!";
 
@@ -20,7 +20,7 @@ function createUser() {
                 method: 'POST'
             })
             .then(resp => {
-                if (resp.status == 200) {
+                if (resp.status === 200) {
                     document.getElementById('responseText').style.color="black";
                     document.getElementById('responseText').innerHTML="User has been registered! You can now go back to login.";
                 }

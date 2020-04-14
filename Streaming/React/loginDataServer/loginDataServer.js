@@ -22,7 +22,7 @@ server.get('/checkCred', (req, res) => {
     else if (foundU.password == req.query.password) {
         res.status(200).send("200 - Login successful!");
     } else {
-        res.status(401).send("401 - Login failed! (Wrong password)");
+        res.status(401).send("401 - Login failed! (Probably due to wrong password, the email exists)");
     }
 
     res.end();
