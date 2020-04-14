@@ -1,40 +1,32 @@
+/* Overall div for everything */
 .App {
+
+}
+
+/* Only for formatting the title name of service */
+.thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet {
+  font-size: 100px;
+  color: rgb(25, 20, 20);
+  padding: 0;
+  margin: 0;
   text-align: center;
 }
 
-.App-logo {
-  height: 30vmin;
-  pointer-events: none;
+/* Formatting for the login screen */
+.loginSystem {
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.loginText {
+  padding-top: 8%;
+  color: rgb(25, 20, 20);
+  margin: 0;
 }
 
-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.usernameBox {
+  
 }
 
-.App-link {
-  color: #61dafb;
-}
-.Test{
-  text-align: right;
-}
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.passwordBox {
+
 }
