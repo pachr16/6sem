@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Login() {
 
@@ -16,22 +16,17 @@ function Login() {
         document.getElementById("passwordField").value = "";
     }
 
-    const newUserButton = () => {
-        
-    }
-
     return (
         <div className="loginSystem">
             <h2 className="loginText">Fill in your username:</h2>
-            <br />
-            <textarea id="usernameField" className="usernameBox" autoFocus></textarea>
+            <input id="usernameField" className="usernameBox" autoFocus></input>
             <br />
             <h2 className="loginText">Fill in your password:</h2>
+            <input type="password" id="passwordField" className="passwordBox"></input>
             <br />
-            <textarea id="passwordField" className="passwordBox"></textarea>
-            <br />
-            <button onClick={loginButton}>Submit</button>
-            <button>Create New User</button>
+            <button className="loginButtons" onClick={loginButton}>Submit</button>
+
+            <Link to="/createNewUser"><button className="loginButtons">Create New User</button></Link>
         </div>
     );
 }

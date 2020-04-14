@@ -18,15 +18,35 @@
 }
 
 .loginText {
-  padding-top: 8%;
+  padding-top: 5%;
+  padding-bottom: 1%;
   color: rgb(25, 20, 20);
   margin: 0;
 }
 
+/* covers both email and username inputs */
 .usernameBox {
   
 }
 
 .passwordBox {
+  
+}
 
+/* covers both the submit and create new user buttons on the login page */
+.loginButtons {
+  margin: 1%;
+}
+
+/* used for displaying confirmations/warnings after trying to register users */
+.respText {
+  color: red;
+}
+
+h1 {
+  color: rgb(25, 20, 20);
+}
+
+h2 {
+  color: rgb(25, 20, 20);
 }
