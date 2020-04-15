@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import Login from './login/Login.js';
 import CreateNewUser from './login/CreateNewUser.js';
 import SingleSong from './browser/SingleSong.js';
+import Help from './misc/Help.js';
+import About from './misc/About.js';
 
 
 
@@ -49,6 +50,14 @@ function Homepage() {
             <Login />
           </Route>
 
+          <Route exact path="/help">
+            <Help />
+          </Route>
+
+          <Route exact path="/about">
+            <About />
+          </Route>
+
           <Route exact path = "/">
             <Login />
           </Route>
@@ -57,6 +66,6 @@ function Homepage() {
 
         </Switch>
     </div>
-  )
+  );
 }
-export default Homepage
+export default Homepage;
