@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import {
   BrowserRouter as Router,
   Switch,
@@ -37,7 +36,6 @@ function Homepage() {
   const songcards = songs.map(song => <SingleSong key={song.song_id} data={song} />)
   return (
     <div>
-      <Router>
         <Switch>
           <Route exact path="/createNewUser">
             <CreateNewUser />
@@ -58,7 +56,6 @@ function Homepage() {
           {/* add routes to new components here */}
 
         </Switch>
-      </Router>
     </div>
   )
 }

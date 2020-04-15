@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
 import './App.css';
 import FancyNavbar from './navbar/FancyNavbar.js'
 
@@ -10,14 +13,16 @@ function App() {
 
   return (
     <div className="App">
-      {/* header here */}
-      <FancyNavbar />
-      {/* body below here */}
-      <Homepage />
+      <Router>
+        {/* header here */}
+        <FancyNavbar />
 
-      {/* footer below here */}
+        {/* body below here */}
+        <Homepage />
 
+        {/* footer below here */}
 
+      </Router>
     </div>
   );
 }
