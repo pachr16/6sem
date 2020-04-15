@@ -47,7 +47,11 @@ function Homepage() {
             {songcards}
           </Route>
 
-          <Route exact path="/">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
+          <Route exact path="/login">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
+            <Login />
+          </Route>
+
+          <Route exact path = "/">
             <Login />
           </Route>
 
