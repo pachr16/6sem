@@ -25,7 +25,7 @@ function createUser() {
                     document.getElementById('responseText').innerHTML="User has been registered! You can now go back to login.";
                 }
                 else {
-                    document.getElementById('responseText').innerHTML="That email already exists in the system!";
+                    document.getElementById('responseText').innerHTML="Error! I think that email already exists in the system!";
                 }
             });
 

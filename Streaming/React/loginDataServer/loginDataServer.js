@@ -34,8 +34,8 @@ server.post('/newUser', (req, res) => {
     let foundU = users.find(u => u.email == req.query.email);
 
     if (foundU != undefined) {
-        res.status(400);
-        res.send("400 - Email already exists in the system!");
+        res.status(403);
+        res.send("403 - Email already exists in the system!");
     } else {
         let new_id = 0;
         if (users.length > 0) {
