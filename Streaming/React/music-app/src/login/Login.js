@@ -11,7 +11,7 @@ function Login() {
         fetch("http://localhost:8080/checkCred?email=" + document.getElementById("emailField").value + "&password=" + document.getElementById('passwordField').value)
             .then(resp => {
                 if (resp.status === 200) {
-                    window.location.href="http://localhost:3000/createNewUser";
+                    window.location.href="http://localhost:3000/homepage";
                 } else if (resp.status === 404) {
                     document.getElementById("warnText").innerHTML="That email does not match any users in the system!";
                 } else if (resp.status === 401) {

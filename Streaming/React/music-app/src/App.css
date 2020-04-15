@@ -12,6 +12,14 @@
   text-align: center;
 }
 
+h1 {
+  color: rgb(25, 20, 20);
+}
+
+h2 {
+  color: rgb(25, 20, 20);
+}
+
 /* Formatting for the login screen */
 .loginSystem {
   text-align: center;
@@ -43,10 +51,17 @@
   color: red;
 }
 
-h1 {
-  color: rgb(25, 20, 20);
-}
-
-h2 {
-  color: rgb(25, 20, 20);
+/* formatting for the song cards displaying single songs */
+.songCard {
+  background: rgb(25, 20, 20);
+  min-height: 10vh;
+  width: 60%;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1%;
+  color: rgb(200, 200, 200);
+  font-size: 20px;
 }
