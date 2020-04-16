@@ -4,25 +4,23 @@ import Previous from './Previous';
 import Skip from './Skip';
 import { loadFile } from './Streaming';
 
-async function Player(props) {
+function Player(props) {
     const [duration, setDuration] = useState(0);
-
     const [streamHandler, setStreamHandler] = useState(null);
 
-    try {
-        if(streamHandler === null){
-            setStreamHandler(await loadFile(props.currentSong, setDuration));
-        }
-    } catch (error) {
-        console.log('Error: ' + error);
+    function setDur(dur) {
+        setDuration(2);
+        console.log(duration);
+        setDuration(dur);
+        console.log(duration);
     }
     
 
     function play(duration) {
-        streamHandler.play(duration);
+        setStreamHandler(loadFile(props.currentSong, setDur(duration)));
     }
     function stop() {
-        streamHandler.stop();
+        setStreamHandler(null);
     }
 
     return(

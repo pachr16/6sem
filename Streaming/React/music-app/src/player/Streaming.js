@@ -7,15 +7,14 @@ const url = "http://localhost:2000";
 const socket=socketClient(url);
 
 const getAudioContext = () => {
-    AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new AudioContext();
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     
-    return {audioContext};
+    return audioContext;
 };
 
 const loadFile = (props) => new Promise (async (resolve, reject) => {
     try {
-        const setDuration = props.setDuration;
+        const {currentSong, setDuration} = props;
         let source = null;
         let playWhileLoadingDuration = 0;
         let startAt = 0;
@@ -58,7 +57,7 @@ const loadFile = (props) => new Promise (async (resolve, reject) => {
         const stop = () => source && source.stop(0);
         
 
-        socket.emit('getSong', props.currentSong, () => {});
+        socket.emit('getSong', currentSong, () => {});
         ss(socket).on('songStream', (stream, {stat}) => {
             let rate = 0;
             let isData = false;
