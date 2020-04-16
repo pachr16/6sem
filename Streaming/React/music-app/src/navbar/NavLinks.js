@@ -9,7 +9,7 @@ function NavLinks() {
     }
 
     return (
-        <span class="dropdown">
+        <span className="dropdown">
             <button>Menu</button>
             <label>
                 <input type="checkbox" />
@@ -18,7 +18,7 @@ function NavLinks() {
                     <Link to="/account"><li>Account Settings</li></Link>
                     <Link to="/about"><li>About</li></Link>
                     <Link to="/help"><li>Help</li></Link>
-                    <li class="divider"></li>
+                    <li className="divider"></li>
                     <li onClick={logOut}>Log out</li>
                 </ul>
             </label>

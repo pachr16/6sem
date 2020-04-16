@@ -5,6 +5,7 @@
     display: inline-block;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
+    align-items: right;
   }
   .dropdown:hover{
     cursor:pointer;

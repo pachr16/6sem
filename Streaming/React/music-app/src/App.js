@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
@@ -10,6 +10,8 @@ import Homepage from './homepage/Homepage.js';
 
 function App() {
 
+  const [isPlaying, setPlaying] = useState(false);
+  const [currentSong, setCurrentSong] = useState(undefined);
 
   return (
     <div className="App">
@@ -18,7 +20,7 @@ function App() {
         <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
           Generic Unnamed Streaming Service
         </h1>
-        <FancyNavbar />
+        <FancyNavbar currentSong={currentSong} isPlaying={isPlaying} setPlaying={setPlaying} />
 
         {/* body below here */}
         <Homepage />

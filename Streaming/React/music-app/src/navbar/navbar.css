@@ -5,8 +5,15 @@
     min-height: 10vh;
     margin: 0px;
     padding: 0px;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .navigableLogo {
-    min-height: 10vh;
+    height: 5%;
+    width: 5%;
+    margin-top: 4px;
+}
+
+.navLinks {
 }
