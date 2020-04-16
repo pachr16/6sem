@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
-import {
-  BrowserRouter as Router,
-} from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter as Router } from "react-router-dom";
 import './App.css';
-import FancyNavbar from './navbar/FancyNavbar.js'
-
+import FancyNavbar from './navbar/FancyNavbar.js';
 import Homepage from './homepage/Homepage.js';
+import { StreamingInfoProvider } from './player/StreamingContext';
 
 
 function App() {
@@ -14,21 +12,23 @@ function App() {
   const [currentSong, setCurrentSong] = useState('beyonce');
 
   return (
-    <div className="App">
-      <Router>
-        {/* header here */}
-        <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
-          Generic Unnamed Streaming Service
+    <StreamingInfoProvider>
+      <div className="App">
+        <Router>
+          {/* header here */}
+          <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
+            Generic Unnamed Streaming Service
         </h1>
-        <FancyNavbar currentSong={currentSong} isPlaying={isPlaying} setPlaying={setPlaying} />
+          <FancyNavbar currentSong={currentSong} isPlaying={isPlaying} setPlaying={setPlaying} />
 
-        {/* body below here */}
-        <Homepage />
+          {/* body below here */}
+          <Homepage />
 
-        {/* footer below here */}
+          {/* footer below here */}
 
-      </Router>
-    </div>
+        </Router>
+      </div>
+    </StreamingInfoProvider>
   );
 }
 

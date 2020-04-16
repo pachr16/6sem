@@ -28,7 +28,7 @@ function Login() {
     return (
         <div className="loginSystem">
             <h2 className="loginText" >Fill in your email:</h2>
-            <input id="emailField" className="usernameBox" placeholder="Enter Email" autoFocus></input>
+            <input id="emailField" className="usernameBox" placeholder="Enter email" autoFocus></input>
             <br />
             <h2 className="loginText">Fill in your password:</h2>
             <input type="password" id="passwordField" className="passwordBox" placeholder="Enter password"></input>

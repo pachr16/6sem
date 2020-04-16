@@ -46,12 +46,12 @@ function CreateNewUser() {
             <h2 className="loginText">
                 Input username for your new user:
             </h2>
-            <input className="usernameBox" id="unameField" placeholder="Enter Username"></input>
+            <input className="usernameBox" id="unameField" placeholder="Enter username"></input>
             <br />
             <h2 className="loginText">
                 Input password for your new user:
             </h2>
-            <input type="password" className="passwordBox" id="passField" placeholder="Enter Password"></input>
+            <input type="password" className="passwordBox" id="passField" placeholder="Enter password"></input>
             <br />
             <button className="loginButtons" onClick={createUser}>Submit</button>
             <Link to="/"><button className="loginButtons">Back to Login</button></Link>
