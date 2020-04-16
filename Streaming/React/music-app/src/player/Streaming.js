@@ -2,7 +2,7 @@ import ss from 'socket.io-stream';
 import socketClient from 'socket.io-client';
 import { withWaveHeader, appendBuffer} from './waveHeader';
 
-const url = "http://localhost:3001";
+const url = "http://localhost:2000";
 
 const socket=socketClient(url);
 
@@ -15,7 +15,7 @@ const getAudioContext = () => {
 
 const loadFile = (props) => new Promise (async (resolve, reject) => {
     try {
-        const setDuration = props.duration;
+        const setDuration = props.setDuration;
         let source = null;
         let playWhileLoadingDuration = 0;
         let startAt = 0;

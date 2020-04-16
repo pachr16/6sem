@@ -11,7 +11,7 @@ import Homepage from './homepage/Homepage.js';
 function App() {
 
   const [isPlaying, setPlaying] = useState(false);
-  const [currentSong, setCurrentSong] = useState(undefined);
+  const [currentSong, setCurrentSong] = useState('beyonce');
 
   return (
     <div className="App">
