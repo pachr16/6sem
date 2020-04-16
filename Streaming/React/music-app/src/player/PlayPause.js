@@ -9,7 +9,7 @@ function PlayPause(props) {
             props.setPlaying(false);
         }
         else {
-            props.play(0);
+            props.play();
             props.setPlaying(true);
         }
     }
