@@ -42,7 +42,7 @@ app.get('/test', function(req,res){
 });
 
 io.on('connection', client => {
-  client.on('streamSong', (data) => {
+  client.on('getSong', (data) => {
     console.log("received" + data + "from client")
     const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
     const stat = fileSystem.statSync(filePath);
@@ -50,7 +50,7 @@ io.on('connection', client => {
 
     const stream = ss.createStream();
     readStream.pipe(stream);
-    ss(client).emit('song-stream', stream, {stat});
+    ss(client).emit('songStream', stream, {stat});
     //stream.destroy();   maybe????
   });
 

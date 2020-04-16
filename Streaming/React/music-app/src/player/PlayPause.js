@@ -6,11 +6,9 @@ function PlayPause(props) {
     function playPauseClicked() {
         if (props.isPlaying) {
             props.setPlaying(false);
-            return;
         }
         else {
             props.setPlaying(true);
-            return;
         }
     }
 
