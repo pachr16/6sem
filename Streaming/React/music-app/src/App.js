@@ -7,10 +7,6 @@ import { StreamingInfoProvider } from './player/StreamingContext';
 
 
 function App() {
-
-  const [isPlaying, setPlaying] = useState(false);
-  const [currentSong, setCurrentSong] = useState('beyonce');
-
   return (
     <StreamingInfoProvider>
       <div className="App">
@@ -19,7 +15,7 @@ function App() {
           <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
             Generic Unnamed Streaming Service
         </h1>
-          <FancyNavbar currentSong={currentSong} isPlaying={isPlaying} setPlaying={setPlaying} />
+          <FancyNavbar />
 
           {/* body below here */}
           <Homepage />
