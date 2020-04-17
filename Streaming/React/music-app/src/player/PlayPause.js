@@ -10,14 +10,14 @@ function PlayPause() {
 
 
     // den her er kun midlertidigt fucked/ødelagt for testing purposes, dont worry (trust me, im an engineer)
-    function playPauseClicked() {
+    function playPauseClicked2() {
         //if (streamHandler === {}) {
             try {
                 console.log("StreamHandler: " + streamHandler);
                 loadFile({ currentSong, setDuration })
                     .then(sthand => {                           // *****OBS****** pt kommer jeg ikke herind, så promise bliver aldrig resolvet - tror det er det der er fejlen
                         console.log("Success?");                // dvs vi skal lave noget om på den måde vi resolver i Streaming.js, I think
-                        sthand.play(duration);  
+                        sthand.play(duration);                  // se evt duplicate functionen nedenunder
                         console.log("Success!");
                     });
                 console.log("StreamHandler: " + streamHandler);
@@ -36,6 +36,29 @@ function PlayPause() {
             setPlaying(true);
         }
         */
+    }
+
+    async function playPauseClicked() {                 // det her må vi godt - selve React-functionen må ikke være async, men vi må godt definere andre async funcs her uden for return
+        //if (streamHandler === {}) {
+            try {
+                console.log("StreamHandler before: " + streamHandler);
+                setStreamHandler(await loadFile({ currentSong, setDuration}));      // det løser await problemet, men det her promise bliver stadig aldrig resovlet
+                console.log("StreamHandler now: " + streamHandler);                 // ... for vi når aldrig til den her linje - den console.logger kun den første udskrift
+            } catch (error) {                                                       // muligvis er det noget med io-socket i Streaming, den smider et par errors
+                console.log("Error when trying to create StreamHandler! " + error);
+            }
+        //}
+
+        
+        if (isPlaying) {
+            streamHandler.stop();
+            setPlaying(false);
+        }
+        else {
+            streamHandler.play();
+            setPlaying(true);
+        }
+        
     }
 
     return (
