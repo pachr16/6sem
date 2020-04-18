@@ -1,5 +1,4 @@
 import React from 'react'
-//import '../App.css';
 
 
 /* for displaying the cards with info about each song, to be shown in an overview list */

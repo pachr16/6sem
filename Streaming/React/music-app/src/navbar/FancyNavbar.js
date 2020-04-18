@@ -9,7 +9,7 @@ function FancyNavbar(props){
     return(
         <div className="navBackground">
           <NavigableLogo />
-          <Player currentSong={props.currentSong} isPlaying={props.isPlaying} setPlaying={props.setPlaying} />
+          <Player />
           <NavLinks className="navLinks" />
         </div>
     )

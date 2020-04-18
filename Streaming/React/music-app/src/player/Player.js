@@ -3,7 +3,7 @@ import PlayPause from './PlayPause';
 import Previous from './Previous';
 import Skip from './Skip';
 
-function Player(props) {
+function Player() {
     return(
         <div>
             <Previous />
