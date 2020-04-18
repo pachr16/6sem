@@ -8,7 +8,7 @@ export const StreamingInfoProvider = (props) => {
     const [isPlaying, setPlaying] = useState(false);
     const [currentSong, setSong] = useState('beyonce');
     const [duration, setDuration] = useState(0);
-    const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
+    const [streamHandler, setStreamHandler] = useState();
 
 
     return (

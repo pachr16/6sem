@@ -37,7 +37,7 @@ app.get('*', (req, res) => {
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
-app.get('/test', function(req,res){
+app.get('/test', function (req, res) {
   console.log("get method activate!")
 });
 
@@ -45,19 +45,22 @@ io.on('connection', client => {
   client.on('getSong', (data) => {
     console.log("received" + data + "from client")
     const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
-    const stat = fileSystem.statSync(filePath);
+    const stat = fileSystem.statSync(filePath, { bigint: true });
     const readStream = fileSystem.createReadStream(filePath);
 
     const stream = ss.createStream();
     readStream.pipe(stream);
-    ss(client).emit('songStream', stream, {stat});
-    //stream.destroy();   maybe????
+
+    ss(client).emit('songStream', stream, { stat });
+
+
+    //stream.destroy();   //maybe????
   });
 
   console.log('a user connected');
   //socket.on('disconnect', function(){
-    //console.log('user disconnected');
- // });
+  //console.log('user disconnected');
+  // });
 });
 /*
 io.on('connection', client => {
@@ -78,7 +81,7 @@ io.on('connection', client => {
   client.on('disconnect', () => {});
 });
 */
-server.listen(2000, function(){
-//server.listen(process.env.PORT || '2000', function () {
+server.listen(2000, function () {
+  //server.listen(process.env.PORT || '2000', function () {
   console.log('Server app listening on port 2000!');
 });

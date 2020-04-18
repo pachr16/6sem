@@ -88,7 +88,7 @@ const loadFile = (props) => new Promise (async (resolve, reject) => {
         })
     }
     catch(e) {
-        reject(e)
+        console.log(e);
     }
 });
 
