@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PlayPic from '../assets/play.png';
 import PausePic from '../assets/pause.png';
 import { loadFile } from './Streaming';
@@ -6,7 +6,8 @@ import { StreamingContext } from './StreamingContext';
 
 
 function PlayPause() {
-    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration, streamHandler, setStreamHandler] = useContext(StreamingContext);
+    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);  // streamHandler, setStreamHandler
+    const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
 
 
     useEffect(() => {
@@ -16,11 +17,11 @@ function PlayPause() {
 
     async function createStreamHandler() {
         console.log("Creating Streamhandler! Current streamhandler is: " + streamHandler);
-        await loadFile({ currentSong, setDuration })
-            .then(newStreamHandler => setStreamHandler(newStreamHandler));
+        //await loadFile({ currentSong, setDuration })
+        //    .then(newStreamHandler => setStreamHandler(newStreamHandler));
         console.log("Created new streamhandler: " + streamHandler);
 
-        await streamHandler.play();
+        await streamHandler.stop();
         setPlaying(true);
     }
 
