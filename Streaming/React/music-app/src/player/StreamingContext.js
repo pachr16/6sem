@@ -1,6 +1,4 @@
 import React, { useState, createContext } from 'react';
-import { loadFile } from './Streaming.js';
-
 
 export const StreamingContext = createContext();
 
