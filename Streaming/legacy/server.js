@@ -41,27 +41,39 @@ app.get('/test', function (req, res) {
   console.log("get method activate!")
 });
 
+/*
+io.on('error', (error) => {
+  console.log(error);
+});
+*/
+
 io.on('connection', client => {
-  client.on('getSong', (data) => {
-    console.log("received" + data + "from client")
+  ss(client).on('getSong', (data, stream) => {
+    console.log("received " + data + " from client");
+    
     const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
+    console.log("Looking for file at: " + filePath);
+
     const stat = fileSystem.statSync(filePath, { bigint: true });
+    console.log("Filesize: " + stat.size);
     const readStream = fileSystem.createReadStream(filePath);
 
-    const stream = ss.createStream();
+    //const stream = ss.createStream();
     readStream.pipe(stream);
 
-    ss(client).emit('songStream', stream, { stat });
+    //ss(client).emit('songStream', stream, { stat });
 
 
     //stream.destroy();   //maybe????
   });
 
   console.log('a user connected');
-  //socket.on('disconnect', function(){
-  //console.log('user disconnected');
-  // });
+  ss(client).on('disconnect', function () {
+    console.log('user disconnected');
+  });
 });
+
+
 /*
 io.on('connection', client => {
 
