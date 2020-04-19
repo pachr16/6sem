@@ -6,7 +6,7 @@ export const StreamingInfoProvider = (props) => {
     const [isPlaying, setPlaying] = useState(false);
     const [currentSong, setSong] = useState('test');
     const [duration, setDuration] = useState(0);
-    const [streamHandler, setStreamHandler] = useState(); // maybe use new Promise() and somehow declare that the promise can contain two methods (play/stop)
+    const [streamHandler, setStreamHandler] = useState(Promise.resolve(() => {}, () => {})); // maybe use new Promise() and somehow declare that the promise can contain two methods (play/stop)
 
 
     return (

@@ -30,7 +30,7 @@ const loadFile = (props) => new Promise(async (resolve, reject) => {
             activeSource = source;
         };
 
-        const play = (resumeTime = 0) => {
+        function play(resumeTime = 0) {
             source = audioContext.createBufferSource();
             source.buffer = audioBuffer;
 
