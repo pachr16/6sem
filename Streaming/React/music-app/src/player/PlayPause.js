@@ -16,7 +16,7 @@ function PlayPause() {
 
     async function createStreamHandler() {
         console.log("Creating Streamhandler! Current streamhandler is: " + streamHandler);
-        streamHandler = await loadFile({ currentSong, setDuration });
+        setStreamHandler(await loadFile({ currentSong, setDuration }));
         console.log("Created new streamhandler: " + streamHandler);
 
         await streamHandler.play();

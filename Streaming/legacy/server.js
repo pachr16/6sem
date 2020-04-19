@@ -56,6 +56,7 @@ io.on('connection', client => {
 
     const stat = fileSystem.statSync(filePath, { bigint: true });
     console.log("Filesize: " + stat.size);
+    
     const readStream = fileSystem.createReadStream(filePath);
 
     //const stream = ss.createStream();

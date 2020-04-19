@@ -63,7 +63,6 @@ const loadFile = (props) => new Promise(async (resolve, reject) => {
         let rate = 0;
         let isData = false;
         stream.on('data', async (data) => {
-            console.log("received a data ping!");
             //console.log("Data received consists of: " + data);
             const audioBufferChunk = await audioContext.decodeAudioData(withWaveHeader(data, 2, 44100));
             const newAudioBuffer = (source && source.buffer) ? appendBuffer(source.buffer, audioBufferChunk, audioContext) : audioBufferChunk;
@@ -71,12 +70,11 @@ const loadFile = (props) => new Promise(async (resolve, reject) => {
             source.buffer = newAudioBuffer;
 
             const loadRate = (data.length * 100) / 35872846; // stat.size;
-            console.log("loadrate is: " + loadRate);
 
             rate = rate + loadRate;
-            console.log("Rate is currently: " + rate);
+            console.log("Loaded: " + rate);
 
-            if (rate >= 100) {
+            if (rate >= 99.9) {
                 console.log("rate has hit more than 100");
                 clearInterval(whileLoadingInterval);
                 audioBuffer = source.buffer;
@@ -88,8 +86,6 @@ const loadFile = (props) => new Promise(async (resolve, reject) => {
             isData = true;
 
             if (isData && rate === loadRate) {
-                console.log("Rate is now equal to loadrate???");
-                console.log("Rate: " + rate + " Loadrate: " + loadRate);
                 const duration = (100 / loadRate) * audioBufferChunk.duration;
                 setDuration(duration);
             }
