@@ -1,8 +1,7 @@
 class User {
-    constructor(id, email, username, password) {
+    constructor(id, email, password) {
         this.id = id;
         this.email = email;
-        this.username = username;
         this.password = password;
         // more ?? playlists? artist verification?
     }
