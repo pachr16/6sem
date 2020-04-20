@@ -69,7 +69,7 @@ server.get('/checkCred', (req, res) => {
             }
 
             //Called data stored locally ending session
-            client.end();
+            client.end;
             console.log("client ended");
 
 
@@ -80,59 +80,33 @@ server.get('/checkCred', (req, res) => {
 });
 
 // for creating a new user in the system
-server.post('/newUser', (req, res) => {
-    let newUser = new User(undefined, req.query.email, req.query.password); users.find(u => u.email == req.query.email);
+server.get('/newUser', (req, res) => {
+    let newUser = new User(undefined, req.query.email, req.query.password); //users.find(u => u.email == req.query.email);
 
     client.connect(function (err) {
         console.log("client connected");
         if (err) {
             //Cannot connect to DataBase for some reason
             console.error('could not connect to DataBase - Try again later.', err);
-            res.status(500).send("500 - Internal Server Error");
+            //res.status(500).send("500 - Internal Server Error");
         }
 
         client.query("INSERT INTO users(email, password) VALUES($1, $2)", [newUser.email, newUser.password], function (err, result) {
             if (err) {
+                if(err == 'error: duplicate key value violates unique constraint "users_email_key"') {
+                    res.status(403).send("403 - Mail already exist");
+                }
                 //DataBase responds with error
-                console.log("Fatal error: " + err);
-                res.status(503).send("503 - Service Unavailable (Database Error)");
-            } else if (result.rows.length != 0) {
-                console.log(result.rows[0].id);
+                console.log(err);
+                //res.status(503).send("503 - Service Unavailable (Database Error)");
+            } else if (result.command === "INSERT") {
+                console.log("SUCCESS!!");
+                res.status(200).send("Success! - User created!");
             }
-
-            //console.log(result);
-            client.end();
+            client.end;
+            console.log("client ended");
         });
     });
-
-
-
-
-
-
-
-    if (foundU != undefined) {
-        res.status(403);
-        res.send("403 - Email already exists in the system!");
-    } else {
-        let new_id = 0;
-        if (users.length > 0) {
-            new_id = users[users.length - 1].id + 1;    // next id will be one higher than the last user in the list, to not create duplicate ids
-        }
-
-        let newuser = new User(new_id, req.query.email, req.query.username, req.query.password);
-        users.push(newuser);
-
-        console.log("Just created new user. List now holds:");
-        users.forEach(element => {
-            console.log(element.id + ", Name: " + element.username + ", email: " + element.email + ", password: " + element.password);
-        });
-
-        res.status(200);
-        res.send("User has been created! ID: " + new_id);
-    }
-
-    res.end();
 });
 
 server.listen(8080);
