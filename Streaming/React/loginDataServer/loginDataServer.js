@@ -53,24 +53,27 @@ server.get('/checkCred', (req, res) => {
                 //No Error but no results either
                 console.log("No match found on given email");
                 res.status(404).send("404 - Email does not exist in system");
+            } else if (result.rows.length != 0) {
+                //store result from DB
+                foundUser = new User(result.rows[0].id, result.rows[0].email, result.rows[0].password);
+
+                //check if email and password match
+                if (askUser.email !== foundUser.email || askUser.password !== foundUser.password) {
+                    console.log("No Match!")
+                    res.status(401).send("401 - Email or password does not match!");
+                } else if (askUser.email === foundUser.email && askUser.password === foundUser.password) {
+                    console.log("User verified - Login Succesfull!")
+                    res.status(200).send(foundUser.id);
+                }
+
             }
-            //result found
-            //store result
-            foundUser = new User(result.rows[0].id, result.rows[0].email, result.rows[0].password);
 
             //Called data stored locally ending session
             client.end();
             console.log("client ended");
 
-            //check if email and password match
-            if (askUser.email !== foundUser.email || askUser.password !== foundUser.password) {
-                    console.log("No Match!")
-                    res.status(401).send("401 - Email or password does not match!");
-            } else if (askUser.email === foundUser.email && askUser.password === foundUser.password) {
-                console.log("User verified - Login Succesfull!")
-                res.status(200).send(foundUser.id);
-            }
-            
+
+
         });
     });
 
@@ -78,8 +81,35 @@ server.get('/checkCred', (req, res) => {
 
 // for creating a new user in the system
 server.post('/newUser', (req, res) => {
+    let newUser = new User(undefined, req.query.email, req.query.password); users.find(u => u.email == req.query.email);
 
-    let foundU = users.find(u => u.email == req.query.email);
+    client.connect(function (err) {
+        console.log("client connected");
+        if (err) {
+            //Cannot connect to DataBase for some reason
+            console.error('could not connect to DataBase - Try again later.', err);
+            res.status(500).send("500 - Internal Server Error");
+        }
+
+        client.query("INSERT INTO users(email, password) VALUES($1, $2)", [newUser.email, newUser.password], function (err, result) {
+            if (err) {
+                //DataBase responds with error
+                console.log("Fatal error: " + err);
+                res.status(503).send("503 - Service Unavailable (Database Error)");
+            } else if (result.rows.length != 0) {
+                console.log(result.rows[0].id);
+            }
+
+            //console.log(result);
+            client.end();
+        });
+    });
+
+
+
+
+
+
 
     if (foundU != undefined) {
         res.status(403);

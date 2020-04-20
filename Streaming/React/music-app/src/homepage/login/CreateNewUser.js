@@ -5,16 +5,13 @@ import { Link } from 'react-router-dom';
 
 function createUser() {
 
-    if (document.getElementById('unameField').value === "" ||
-        document.getElementById('emailField').value === "" ||
+    if (document.getElementById('emailField').value === "" ||
         document.getElementById('passField').value === "") {
 
         document.getElementById('responseText').innerHTML = "Please fill in all fields!";
 
     } else {
-        fetch("http://localhost:8080/newUser?username=" +
-            document.getElementById("unameField").value +
-            "&email=" + document.getElementById("emailField").value +
+        fetch("http://localhost:8080/newUser?email=" + document.getElementById("emailField").value +
             "&password=" + document.getElementById("passField").value,
             {
                 method: 'POST'
@@ -29,7 +26,6 @@ function createUser() {
                 }
             });
 
-        document.getElementById('unameField').value = "";
         document.getElementById('emailField').value = "";
         document.getElementById('passField').value = "";
     }
@@ -42,11 +38,6 @@ function CreateNewUser() {
                 Input your email:
             </h2>
             <input className="usernameBox" id="emailField" placeholder="Enter email"></input>
-            <br />
-            <h2 className="loginText">
-                Input username for your new user:
-            </h2>
-            <input className="usernameBox" id="unameField" placeholder="Enter username"></input>
             <br />
             <h2 className="loginText">
                 Input password for your new user:
