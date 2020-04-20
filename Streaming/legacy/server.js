@@ -14,19 +14,19 @@ const pg = require('pg');
 
 const conString = "postgresql://uzbxyxyi:j7b-g-qv6fw30KkL0dAkN1CMrPMg1sPs@balarama.db.elephantsql.com:5432/uzbxyxyi" //Can be found in the Details page
 const client = new pg.Client(conString);
-client.connect(function(err) {
-  if(err) {
-    return console.error('could not connect to postgres', err);
-  }
-  client.query('SELECT * from users', function(err, result) {
-    if(err) {
-      return console.error('error running query', err);
-    }
-    console.log(result);
-    // >> output: 2018-08-23T14:02:57.117Z
-    client.end();
-  });
-});
+// client.connect(function(err) {
+//   if(err) {
+//     return console.error('could not connect to postgres', err);
+//   }
+//   client.query('SELECT * from users', function(err, result) {
+//     if(err) {
+//       return console.error('error running query', err);
+//     }
+//     console.log(result);
+//     // >> output: 2018-08-23T14:02:57.117Z
+//     client.end();
+//   });
+// });
 
 //const api = express();
 
@@ -57,6 +57,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/build/', './index.html'));
 });
 */
+var test = getMetaData();
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
@@ -134,7 +135,13 @@ function getMetaData(){
     if(err) {
       return console.error('could not connect to postgres', err);
     }
-    client.query('SELECT * from users', function(err, result) {
+    client.query(
+    'SELECT songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs '+
+    'JOIN onalbum ON songs.song_id = onalbum.song_id '+
+    'JOIN albums ON onalbum.album_id = albums.album_id '+
+    'JOIN createdby ON onalbum.album_id = createdby.album_id '+
+    'JOIN artists ON  createdby.artist_id = artists.artist_id',
+     function(err, result) {
       if(err) {
         return console.error('error running query', err);
       }
@@ -143,10 +150,6 @@ function getMetaData(){
       client.end();
     });
   });
-
-
-
-
 
 
   return null
