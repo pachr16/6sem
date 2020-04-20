@@ -33,7 +33,7 @@ function Homepage() {
     }
   ]);
 
-  const songs = () => {
+  const songsid = () => {
     fetch('http://localhost:2000/getMetaData').then(
       (response) => {
         if (response.ok) {
