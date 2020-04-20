@@ -127,7 +127,7 @@ server.listen(2000, function () {
 
 function getMetaData(){
 
-  var metadata
+  var metadata ={};
 
 
   client.connect(function(err) {
