@@ -32,40 +32,53 @@ function Homepage() {
       duration: "duration"
     }
   ]);
-  
+
+  const songsid = () => {
+    fetch('http://localhost:2000/getMetaData').then(
+      (response) => {
+        if (response.ok) {
+          setSongs(response.json());
+          console.log(songs);
+        } else {
+          console.log(response.status);
+        }
+      }
+    );
+  }
+
   const songcards = songs.map(song => <SingleSong key={song.song_id} data={song} />)
 
-  
+
   return (
     <div>
-        <Switch>
-          <Route exact path="/createNewUser">
-            <CreateNewUser />
-          </Route>
+      <Switch>
+        <Route exact path="/createNewUser">
+          <CreateNewUser />
+        </Route>
 
-          <Route exact path="/homepage">
-            {songcards}
-          </Route>
+        <Route exact path="/homepage">
+          {songcards}
+        </Route>
 
-          <Route exact path="/login">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
-            <Login />
-          </Route>
+        <Route exact path="/login">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
+          <Login />
+        </Route>
 
-          <Route exact path="/help">
-            <Help />
-          </Route>
+        <Route exact path="/help">
+          <Help />
+        </Route>
 
-          <Route exact path="/about">
-            <About />
-          </Route>
+        <Route exact path="/about">
+          <About />
+        </Route>
 
-          <Route exact path = "/">
-            <Login />
-          </Route>
+        <Route exact path="/">
+          <Login />
+        </Route>
 
-          {/* add routes to new components here */}
+        {/* add routes to new components here */}
 
-        </Switch>
+      </Switch>
     </div>
   );
 }
