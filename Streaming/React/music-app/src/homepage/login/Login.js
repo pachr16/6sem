@@ -1,27 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { AuthorizationContext } from './AuthorizationContext';
 
 function Login() {
 
+    const [loggedID, setLoggedID] = useContext(AuthorizationContext);
+
+    async function getTextFromStream(readableStream) {
+        let reader = readableStream.getReader();
+        let utf8Decoder = new TextDecoder();
+        let nextChunk;
+
+        let resultStr = '';
+
+        while (!(nextChunk = await reader.read()).done) {
+            let partialData = nextChunk.value;
+            resultStr += utf8Decoder.decode(partialData);
+        }
+
+        return resultStr;
+    }
+
     // called when clicking the login-button to enter the service
-    const loginButton = () => {
+    const loginButton = async () => {
 
         // call server and check credentials
-        fetch("http://localhost:8080/checkCred?email=" + document.getElementById("emailField").value + "&password=" + document.getElementById('passwordField').value)
-            .then(resp => {
-                if (resp.status === 200) {
-                    window.location.href="/homepage";
-                } else if (resp.status === 404) {
-                    document.getElementById("warnText").innerHTML="That email does not match any users in the system!";
-                } else if (resp.status === 401) {
-                    document.getElementById("warnText").innerHTML="Login failed! (Probably due to wrong password, the email exists)";
-                }
-            });
+        let resp = await fetch("http://localhost:8080/checkCred?email=" + document.getElementById("emailField").value + "&password=" + document.getElementById('passwordField').value);
+        let respID = await resp.text();
 
+
+        if (resp.status === 200) {
+            setLoggedID(respID);
+            console.log("href = " + window.location.pathname);
+            return <Redirect to={window.location.pathname === "/" || "/login" ? "/browse" : window.location.pathname} />;
+        } else if (resp.status === 404) {
+            document.getElementById("warnText").innerHTML = "That email does not match any users in the system!";
+        } else if (resp.status === 401) {
+            document.getElementById("warnText").innerHTML = "Login failed! (Probably due to wrong password, the email exists)";
+            
+        }
 
         // clearing textfields
         document.getElementById("emailField").value = "";
         document.getElementById("passwordField").value = "";
+
+
     }
 
     return (
