@@ -131,7 +131,15 @@ io.on('connection', client => {
                     } else {
                       console.log("Now emitting image to client!");
 
-                      ss(client).emit('img', { image: true, buffer: fileData.toString('base64') });
+                      ss(client).emit('metadata', { buffer: {
+                        "title": data.title,
+                        "duration": data.duration,
+                        "song_url": data.song_url,
+                        "size": data.size,
+                        "album": data.album_name,
+                        "image": fileData.toString('base64'),   // art_url has turned into this - base64 encoded because its an image
+                        "artist": data.artist_name
+                      }});
                     }
                   });
               });

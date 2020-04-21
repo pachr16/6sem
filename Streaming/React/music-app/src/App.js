@@ -4,11 +4,13 @@ import './App.css';
 import FancyNavbar from './navbar/FancyNavbar.js';
 import Homepage from './homepage/Homepage.js';
 import { StreamingInfoProvider } from './player/StreamingContext';
+import { MetaProvider } from './homepage/browser/MetaContext';
 
 
 function App() {
   return (
     <StreamingInfoProvider>
+      <MetaProvider>
       <div className="App">
         <Router>
           {/* header here */}
@@ -24,6 +26,7 @@ function App() {
 
         </Router>
       </div>
+      </MetaProvider>
     </StreamingInfoProvider>
   );
 }
