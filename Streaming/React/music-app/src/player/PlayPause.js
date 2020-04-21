@@ -3,30 +3,59 @@ import PlayPic from '../assets/play.png';
 import PausePic from '../assets/pause.png';
 import { loadFile } from './Streaming';
 import { StreamingContext } from './StreamingContext';
+import ss from 'socket.io-stream';
+import socketClient from 'socket.io-client';
 
 
 function PlayPause() {
     const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);  // streamHandler, setStreamHandler
-    const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
+    //const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
+
+
+    const [picture, setPicture] = useState();
 
 
     useEffect(() => {
-        
+
     }, [currentSong]);
+
+    async function testMe() {
+        const url = "http://localhost:2000";
+        const socket = socketClient.connect(url);
+
+        ss(socket).emit('getMetaData', 'thisdoesntmatter', () => {
+            console.log("We've requested metadata!");
+        });
+
+        ss(socket).on('img', (info) => {
+            console.log("Waiting for image");
+            
+            if (info.image) {
+                var playImage = new Image();
+                playImage.src = 'data:image/png;base64,' + info.buffer;
+                setPicture(playImage.src);
+
+                //document.body.appendChild(playImage);
+            }
+        });
+    }
 
 
     async function createStreamHandler() {
-        console.log("Creating Streamhandler! Current streamhandler is: " + streamHandler);
+        console.log("Creating Streamhandler! Current streamhandler is: ");
         //await loadFile({ currentSong, setDuration })
         //    .then(newStreamHandler => setStreamHandler(newStreamHandler));
-        console.log("Created new streamhandler: " + streamHandler);
+        await loadFile({ currentSong, setDuration });
+        console.log("Created new streamhandler: ");
 
-        await streamHandler.stop();
+        //await streamHandler.stop();
         setPlaying(true);
     }
 
     async function playPauseClicked() {
-        setStreamHandler(await createStreamHandler);
+        //createStreamHandler();
+
+        testMe();
 
         /*
         if (isPlaying) {
@@ -90,10 +119,12 @@ async function playPauseClicked() {                 // det her må vi godt - sel
 }
     */
 
-return (
-    <img src={isPlaying ? PausePic : PlayPic} height="50vh" onClick={playPauseClicked} alt="placeholder_text" />
-
-);
+    return (
+        <div>
+            <img src={picture} height="75vh" />
+            <img src={isPlaying ? PausePic : PlayPic} height="50vh" onClick={playPauseClicked} alt="placeholder_text" />
+        </div>
+    );
 
 }
 

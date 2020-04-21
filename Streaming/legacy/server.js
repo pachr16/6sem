@@ -13,7 +13,6 @@ const pg = require('pg');
 //var pg = require('pg').native
 
 const conString = "postgresql://uzbxyxyi:j7b-g-qv6fw30KkL0dAkN1CMrPMg1sPs@balarama.db.elephantsql.com:5432/uzbxyxyi" //Can be found in the Details page
-const client = new pg.Client(conString);
 // client.connect(function(err) {
 //   if(err) {
 //     return console.error('could not connect to postgres', err);
@@ -58,8 +57,6 @@ app.get('*', (req, res) => {
 });
 */
 //getMetaData().then((data) => console.log(data));
-var test = getMetaData();
-console.log(test);
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
@@ -75,8 +72,14 @@ io.on('error', (error) => {
 */
 
 io.on('connection', client => {
+  console.log('a user connected');
+
+  ss(client).on('disconnect', function () {
+    console.log('User disconnected');
+  });
+
   ss(client).on('getSong', (data, stream) => {
-    console.log("received " + data + " from client");
+    console.log("Client requested this song: " + data);
 
     const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
     console.log("Looking for file at: " + filePath);
@@ -95,9 +98,47 @@ io.on('connection', client => {
     //stream.destroy();   //maybe????
   });
 
-  console.log('a user connected');
-  ss(client).on('disconnect', function () {
-    console.log('user disconnected');
+
+  ss(client).on('getMetaData', (req) => {
+    const db = new pg.Client(conString);
+    console.log("Client has asked for metadata for this song: " + req);
+
+    db.connect(function (err) {
+      if (err) {
+        console.error('could not connect to postgres', err);
+      } else {
+        db.query(
+          'SELECT songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs ' +
+          'JOIN onalbum ON songs.song_id = onalbum.song_id ' +
+          'JOIN albums ON onalbum.album_id = albums.album_id ' +
+          'JOIN createdby ON onalbum.album_id = createdby.album_id ' +
+          'JOIN artists ON  createdby.artist_id = artists.artist_id',
+          (err, result) => {
+            if (err) {
+              console.error('error running query', err);
+            } else {
+
+              test = result.rows;
+              // >> output: 2018-08-23T14:02:57.117Z
+              db.end();
+
+              //changes the image url a read file of the image
+              test.map((data) => {
+                data.art_url = fileSystem.readFile(path.resolve(__dirname, './html', './assets', './images', data.art_url),
+                  (err, fileData) => {
+                    if (err) {
+                      console.log("Error!: " + err);
+                    } else {
+                      console.log("Now emitting image to client!");
+
+                      ss(client).emit('img', { image: true, buffer: fileData.toString('base64') });
+                    }
+                  });
+              });
+            }
+          });
+      }
+    });
   });
 });
 
@@ -127,18 +168,18 @@ server.listen(2000, function () {
 });
 
 
-
+/*
 function getMetaData() {
 
   var test = [];
 
   return (
 
-    client.connect(function (err) {
+    db.connect(function (err) {
       if (err) {
         return console.error('could not connect to postgres', err);
       }
-      client.query(
+      db.query(
         'SELECT songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs ' +
         'JOIN onalbum ON songs.song_id = onalbum.song_id ' +
         'JOIN albums ON onalbum.album_id = albums.album_id ' +
@@ -150,7 +191,7 @@ function getMetaData() {
           }
           test = result.rows;
           // >> output: 2018-08-23T14:02:57.117Z
-          client.end();
+          db.end();
 
           //changes the image url a read file of the image
           var ret = (test.map((data) => {
@@ -168,7 +209,7 @@ function getMetaData() {
           );
           console.log(ret)
 
-          return  ret;
+          return ret;
 
         });
 
@@ -177,6 +218,7 @@ function getMetaData() {
     ))
 }
 
+*/
 
 
 
@@ -187,16 +229,16 @@ function getMetaData() {
 
 
 
-function getImageContext(imageURL){
-var imagaedata = fileSystem.readFile(path.resolve(__dirname, './html', './assets', './images', data.art_url), (err, fileData) => {
-  if (err) {
-    console.log(err);
-    return null;
-  } else {
-    //console.log(fileData)
-    return fileData;
-  }
-});
+function getImageContext(imageURL) {
+  var imagaedata = fileSystem.readFile(path.resolve(__dirname, './html', './assets', './images', data.art_url), (err, fileData) => {
+    if (err) {
+      console.log(err);
+      return null;
+    } else {
+      //console.log(fileData)
+      return fileData;
+    }
+  });
 
 }
 //console.log(typeof getImageContext);
