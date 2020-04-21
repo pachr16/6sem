@@ -57,7 +57,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, './public/build/', './index.html'));
 });
 */
+//getMetaData().then((data) => console.log(data));
 var test = getMetaData();
+console.log(test);
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
@@ -75,13 +77,13 @@ io.on('error', (error) => {
 io.on('connection', client => {
   ss(client).on('getSong', (data, stream) => {
     console.log("received " + data + " from client");
-    
+
     const filePath = path.resolve(__dirname, './html', './assets', './music', data + '.wav');
     console.log("Looking for file at: " + filePath);
 
     const stat = fileSystem.statSync(filePath, { bigint: true });
     console.log("Filesize: " + stat.size);
-    
+
     const readStream = fileSystem.createReadStream(filePath);
 
     //const stream = ss.createStream();
@@ -126,31 +128,75 @@ server.listen(2000, function () {
 
 
 
-function getMetaData(){
+function getMetaData() {
 
-  var metadata ={};
+  var test = [];
 
+  return (
 
-  client.connect(function(err) {
-    if(err) {
-      return console.error('could not connect to postgres', err);
-    }
-    client.query(
-    'SELECT songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs '+
-    'JOIN onalbum ON songs.song_id = onalbum.song_id '+
-    'JOIN albums ON onalbum.album_id = albums.album_id '+
-    'JOIN createdby ON onalbum.album_id = createdby.album_id '+
-    'JOIN artists ON  createdby.artist_id = artists.artist_id',
-     function(err, result) {
-      if(err) {
-        return console.error('error running query', err);
+    client.connect(function (err) {
+      if (err) {
+        return console.error('could not connect to postgres', err);
       }
-      console.log(result);
-      // >> output: 2018-08-23T14:02:57.117Z
-      client.end();
-    });
-  });
+      client.query(
+        'SELECT songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs ' +
+        'JOIN onalbum ON songs.song_id = onalbum.song_id ' +
+        'JOIN albums ON onalbum.album_id = albums.album_id ' +
+        'JOIN createdby ON onalbum.album_id = createdby.album_id ' +
+        'JOIN artists ON  createdby.artist_id = artists.artist_id',
+        function (err, result) {
+          if (err) {
+            return console.error('error running query', err);
+          }
+          test = result.rows;
+          // >> output: 2018-08-23T14:02:57.117Z
+          client.end();
 
+          //changes the image url a read file of the image
+          var ret = (test.map((data) => {
+            data.art_url = fileSystem.readFile(path.resolve(__dirname, './html', './assets', './images', data.art_url), (err, fileData) => {
+              if (err) {
+                console.log(err);
+                return null;
+              } else {
+                console.log(fileData)
+                return fileData;
+              }
+            });
+            return data;
+          })
+          );
+          console.log(ret)
 
-  return null
+          return  ret;
+
+        });
+
+    }
+
+    ))
 }
+
+
+
+
+
+
+//mere opdelt:
+
+
+
+
+function getImageContext(imageURL){
+var imagaedata = fileSystem.readFile(path.resolve(__dirname, './html', './assets', './images', data.art_url), (err, fileData) => {
+  if (err) {
+    console.log(err);
+    return null;
+  } else {
+    //console.log(fileData)
+    return fileData;
+  }
+});
+
+}
+//console.log(typeof getImageContext);
