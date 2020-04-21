@@ -6,7 +6,7 @@ import CreateNewUser from './login/CreateNewUser.js';
 import SingleSong from './browser/SingleSong.js';
 import Help from './misc/Help.js';
 import About from './misc/About.js';
-
+import NotFound from './misc/NotFound.js';
 
 
 
@@ -67,7 +67,7 @@ function Homepage() {
           {requireAuth(songcards)}
         </Route>
 
-        <Route exact path="/login">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
+        <Route exact path="/login">
           <Login />
         </Route>
 
@@ -84,6 +84,15 @@ function Homepage() {
         </Route>
 
         {/* add routes to new components here */}
+
+
+
+
+
+        {/* THIS ONE MUST BE LAST!! */}
+        <Route path="/">
+          <NotFound />
+        </Route>
 
       </Switch>
     </div>

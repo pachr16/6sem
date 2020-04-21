@@ -1,5 +1,4 @@
 import React from 'react';
-//import '../App.css';
 import { Link } from 'react-router-dom';
 
 
@@ -46,7 +45,7 @@ function CreateNewUser() {
             <br />
             <button className="loginButtons" onClick={createUser}>Submit</button>
             <Link to="/"><button className="loginButtons">Back to Login</button></Link>
-            <h3 className="respText" id="responseText"></h3>
+            <h2 className="respText" id="responseText"></h2>
         </div>
     );
 }

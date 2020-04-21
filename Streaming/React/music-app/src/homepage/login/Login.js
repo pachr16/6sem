@@ -3,23 +3,8 @@ import { Link, Redirect } from 'react-router-dom';
 import { AuthorizationContext } from './AuthorizationContext';
 
 function Login() {
-
     const [loggedID, setLoggedID] = useContext(AuthorizationContext);
 
-    async function getTextFromStream(readableStream) {
-        let reader = readableStream.getReader();
-        let utf8Decoder = new TextDecoder();
-        let nextChunk;
-
-        let resultStr = '';
-
-        while (!(nextChunk = await reader.read()).done) {
-            let partialData = nextChunk.value;
-            resultStr += utf8Decoder.decode(partialData);
-        }
-
-        return resultStr;
-    }
 
     // called when clicking the login-button to enter the service
     const loginButton = async () => {
@@ -43,15 +28,12 @@ function Login() {
         // clearing textfields
         document.getElementById("emailField").value = "";
         document.getElementById("passwordField").value = "";
-
-
     }
 
     return (
         <div className="loginSystem">
-            <h2 className="loginText" >Fill in your email:</h2>
+            <h2 className="loginText">Fill in your email:</h2>
             <input id="emailField" className="usernameBox" placeholder="Enter email" autoFocus></input>
-            <br />
             <h2 className="loginText">Fill in your password:</h2>
             <input type="password" id="passwordField" className="passwordBox" placeholder="Enter password"></input>
             <br />

@@ -20,13 +20,25 @@ h2 {
   color: rgb(25, 20, 20);
 }
 
+h3 {
+  color: rgb(25, 20, 20);
+  padding-left: 30px;
+  font-size: 40px;
+}
+
+p {
+  color: rgb(25, 20, 20);
+  padding-left: 20px;
+  font-size: 20px;
+}
+
 /* Formatting for the login screen */
 .loginSystem {
   text-align: center;
 }
 
 .loginText {
-  padding-top: 5%;
+  padding-top: 3%;
   padding-bottom: 1%;
   color: rgb(25, 20, 20);
   margin: 0;
@@ -44,6 +56,7 @@ h2 {
 /* covers both the submit and create new user buttons on the login page */
 .loginButtons {
   margin: 1%;
+  margin-top: 2%;
 }
 
 /* used for displaying confirmations/warnings after trying to register users */

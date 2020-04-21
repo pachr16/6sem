@@ -5,12 +5,12 @@ function Help() {
 
     return(
         <div>
-            <h2 style={style}>
-                This page is not supported during this stage of development.
-            </h2>
-            <h2 style={style}>
+            <h3>
+                Unfortunately, this page is not supported during this stage of development!
+            </h3>
+            <p>
                 It might contain things like a phone number or email for support in the future.
-            </h2>
+            </p>
         </div>
     );
 }
