@@ -2,7 +2,7 @@ import React from 'react';
 
 function About() {
     const background = {
-        "background-color": "rgb(200, 200, 200)",
+        "backgroundColor": "rgb(200, 200, 200)",
         "padding": "10px"
     };
 

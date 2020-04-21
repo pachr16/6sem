@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { AuthorizationContext } from './login/AuthorizationContext';
 import Login from './login/Login.js';
 import CreateNewUser from './login/CreateNewUser.js';

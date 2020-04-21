@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthorizationContext } from './AuthorizationContext';
 
 function Login() {

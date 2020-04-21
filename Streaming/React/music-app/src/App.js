@@ -1,6 +1,6 @@
 import React from 'react';
 import { AuthorizationProvider } from './homepage/login/AuthorizationContext';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import './App.css';
 import FancyNavbar from './navbar/FancyNavbar.js';
 import Homepage from './homepage/Homepage.js';
@@ -16,7 +16,7 @@ function App() {
             {/* header here */}
             <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
               Generic Unnamed Streaming Service
-        </h1>
+            </h1>
             <FancyNavbar />
 
             {/* body below here */}
