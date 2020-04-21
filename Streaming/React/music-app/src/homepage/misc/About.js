@@ -10,7 +10,7 @@ function About() {
     return(
         <div style={background}>
             <h3>About Us</h3>
-            <p>
+            <p className="misc-p">
                 We are a group of Software Engineering students from the University of Southern Denmark (SDU / Syddansk Universitet),
                  who are currently working on our bachelors project. <br/>
                 This site has been created purely for testing purposes, as a somewhat generic streaming service

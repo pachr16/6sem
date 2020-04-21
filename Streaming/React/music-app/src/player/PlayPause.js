@@ -7,7 +7,7 @@ import { StreamingContext } from './StreamingContext';
 
 function PlayPause() {
     const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);  // streamHandler, setStreamHandler
-    const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
+    //const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
 
 
     useEffect(() => {
@@ -16,17 +16,17 @@ function PlayPause() {
 
 
     async function createStreamHandler() {
-        console.log("Creating Streamhandler! Current streamhandler is: " + streamHandler);
+        console.log("Creating Streamhandler! Current streamhandler is: "); // + streamHandler);
         //await loadFile({ currentSong, setDuration })
         //    .then(newStreamHandler => setStreamHandler(newStreamHandler));
-        console.log("Created new streamhandler: " + streamHandler);
+        console.log("Created new streamhandler: "); //streamHandler
 
-        await streamHandler.stop();
+
         setPlaying(true);
     }
 
     async function playPauseClicked() {
-        setStreamHandler(await createStreamHandler);
+        createStreamHandler();
 
         /*
         if (isPlaying) {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Help() {
+function AccountSettings() {
     const style = { "text-align": "center" };
 
     return(
@@ -9,10 +9,10 @@ function Help() {
                 Unfortunately, this page is not supported during this stage of development!
             </h3>
             <p className="misc-p">
-                It might contain things like a phone number or email for support in the future.
+                In the future, it would contain options for changing your email and password, as well as perhaps the possibility of setting some preferences regarding layout, UI language etc.
             </p>
         </div>
     );
 }
 
-export default Help;
+export default AccountSettings;

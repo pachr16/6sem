@@ -16,15 +16,15 @@ function Login() {
 
         if (resp.status === 200) {
             setLoggedID(respID);
-            console.log("href = " + window.location.pathname);
-            return <Redirect to={window.location.pathname === "/" || "/login" ? "/browse" : window.location.pathname} />;
+            return;     // correct react component will render automatically - login was just rendered in front while not authorized
+
         } else if (resp.status === 404) {
             document.getElementById("warnText").innerHTML = "That email does not match any users in the system!";
+
         } else if (resp.status === 401) {
             document.getElementById("warnText").innerHTML = "Login failed! (Probably due to wrong password, the email exists)";
             
         }
-
         // clearing textfields
         document.getElementById("emailField").value = "";
         document.getElementById("passwordField").value = "";

@@ -7,13 +7,12 @@ import SingleSong from './browser/SingleSong.js';
 import Help from './misc/Help.js';
 import About from './misc/About.js';
 import NotFound from './misc/NotFound.js';
+import AccountSettings from './misc/AccountSettings';
 
 
 
 function Homepage() {
-
   const [loggedID, setLoggedID] = useContext(AuthorizationContext);
-
   const [songs, setSongs] = useState([
     {
       song_id: 1,
@@ -48,6 +47,8 @@ function Homepage() {
 
   const songcards = songs.map(song => <SingleSong key={song.song_id} data={song} />)
 
+
+
   function requireAuth(destination) {
     if (loggedID == -1) {
       return <Login />
@@ -63,24 +64,26 @@ function Homepage() {
           <CreateNewUser />
         </Route>
 
-        <Route exact path="/browse" >
-          {requireAuth(songcards)}
+        <Route exact path="/account">
+          {requireAuth(<AccountSettings />)}
         </Route>
 
+        {/*}
         <Route exact path="/login">
           <Login />
         </Route>
+        {*/}
+
+        <Route exact path="/" >
+          {requireAuth(songcards)}
+        </Route>
 
         <Route exact path="/help">
-          {requireAuth(<Help />)}
+          <Help />
         </Route>
 
         <Route exact path="/about">
           <About />
-        </Route>
-
-        <Route exact path="/">
-          <Login />
         </Route>
 
         {/* add routes to new components here */}

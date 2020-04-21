@@ -14,7 +14,7 @@ function NavLinks() {
             <label>
                 <input type="checkbox" />
                 <ul>
-                    <Link to="/homepage"><li>Home</li></Link>
+                    <Link to="/"><li>Home</li></Link>
                     <Link to="/account"><li>Account Settings</li></Link>
                     <Link to="/about"><li>About</li></Link>
                     <Link to="/help"><li>Help</li></Link>
