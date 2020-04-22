@@ -108,7 +108,7 @@ io.on('connection', client => {
         console.error('could not connect to postgres', err);
       } else {
         db.query(
-          'SELECT songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs ' +
+          'SELECT songs.song_id, songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs ' +
           'JOIN onalbum ON songs.song_id = onalbum.song_id ' +
           'JOIN albums ON onalbum.album_id = albums.album_id ' +
           'JOIN createdby ON onalbum.album_id = createdby.album_id ' +
@@ -129,9 +129,10 @@ io.on('connection', client => {
                     if (err) {
                       console.log("Error!: " + err);
                     } else {
-                      console.log("Now emitting image to client!");
+                      console.log("Now emitting image " + data.song_id + " to client!");
 
                       ss(client).emit('metadata', { buffer: {
+                        "songid": data.song_id,
                         "title": data.title,
                         "duration": data.duration,
                         "song_url": data.song_url,

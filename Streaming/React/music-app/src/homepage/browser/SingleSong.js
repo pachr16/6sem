@@ -7,6 +7,7 @@ import { StreamingContext } from '../../player/StreamingContext.js';
 function SingleSong(props) {
     const [isPlaying, setPlaying, currentSong, setSong] = useContext(StreamingContext);
 
+    const songid = useSelector(state => state.songids[props.val]);
     const art = useSelector(state => state.arts[props.val]);
     const artist = useSelector(state => state.artists[props.val]);
     const album = useSelector(state => state.albums[props.val]);
@@ -19,7 +20,8 @@ function SingleSong(props) {
     function selectSong() {
         console.log("We have clicked/selected this song: " + title);
 
-        setSong();
+        setSong(songid);
+        setPlaying(true);
     }
 
     return (

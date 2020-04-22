@@ -14,7 +14,7 @@ const getAudioContext = () => {
 
 const loadFile = (props) => new Promise(async (resolve, reject) => {
     try {
-        const { currentSong, setDuration } = props;
+        const { song_url, setDuration, size } = props;
         let source = null;
         let playWhileLoadingDuration = 0;
         let startAt = 0;
@@ -58,7 +58,7 @@ const loadFile = (props) => new Promise(async (resolve, reject) => {
         const stop = () => source && source.stop(0);
 
         const stream = ss.createStream();
-        ss(socket).emit('getSong', currentSong, stream, () => { });
+        ss(socket).emit('getSong', song_url, stream, () => { });
         //ss(socket).on('songStream', (stream, {stat}) => {
         let rate = 0;
         let isData = false;
@@ -69,7 +69,7 @@ const loadFile = (props) => new Promise(async (resolve, reject) => {
             source = audioContext.createBufferSource();
             source.buffer = newAudioBuffer;
 
-            const loadRate = (data.length * 100) / 35872846; // stat.size;
+            const loadRate = (data.length * 100) / size;
 
             rate = rate + loadRate;
             console.log("Loaded: " + rate);

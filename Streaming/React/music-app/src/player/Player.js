@@ -8,14 +8,16 @@ import { StreamingContext } from './StreamingContext';
 function Player() {
     const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);
 
-    const titles = useSelector(state => state.titles);
-    const art = useSelector(state => state.arts[titles.indexOf(currentSong)]);
+    const songids = useSelector(state => state.songids);
+    const index = songids.indexOf(currentSong);
+    const title = useSelector(state => state.titles[index]);
+    const art = useSelector(state => state.arts[index]);
 
     return (
         <div className="wrapper">
             
             <div className="albumart">
-                <img src={art} height="75vh" alt="missing" />
+                <img src={currentSong > 0 ? art : ""} height="75vh" />
             </div>
             <div className="player">
                 <Previous />
@@ -23,7 +25,7 @@ function Player() {
                 <Skip />
             </div>
             <div className="songdisplay">
-                <h4>{currentSong}</h4>
+                <h4>{title}</h4>
             </div>
         </div>
     );

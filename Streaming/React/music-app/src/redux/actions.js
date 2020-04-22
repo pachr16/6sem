@@ -1,3 +1,10 @@
+export const addSongid = (n) => {
+    return {
+        type: 'ADD_SONGID',
+        payload: n
+    }
+}
+
 export const addTitle = (newtitle) => {
     return {
         type: 'ADD_TITLE',

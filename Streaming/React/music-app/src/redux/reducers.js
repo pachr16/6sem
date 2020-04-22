@@ -3,6 +3,16 @@ function clone (src) {
 }
 
 
+export const songids = (state = [], action) => {
+    switch(action.type) {
+        case "ADD_SONGID":
+            state.push(action.payload);
+            return clone(state);
+        default:
+            return state;
+    }
+}
+
 export const titles = (state = [], action) => {
     switch (action.type) {
         case "ADD_TITLE":

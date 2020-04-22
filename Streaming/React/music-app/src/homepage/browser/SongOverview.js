@@ -3,9 +3,9 @@ import SingleSong from './SingleSong';
 import { useSelector } from 'react-redux';
 
 function SongOverview() {
-    const song_urls = useSelector(state => state.song_urls);
+    const songids = useSelector(state => state.songids);
 
-    const newSongcards = song_urls.map((url, index) => (<SingleSong val={index}/>));
+    const newSongcards = songids.map((url, index) => (<SingleSong val={index}/>));
 
     return (
         <div>

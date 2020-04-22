@@ -3,26 +3,40 @@ import PlayPic from '../assets/play.png';
 import PausePic from '../assets/pause.png';
 import { loadFile } from './Streaming';
 import { StreamingContext } from './StreamingContext';
+import { useSelector } from 'react-redux';
 
 
 function PlayPause() {
     const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);  // streamHandler, setStreamHandler
     //const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
 
+    const songids = useSelector(state => state.songids);
+    const index = songids.indexOf(currentSong);
+    const song_url = useSelector(state => state.song_urls[index]);
+    const size = useSelector(state => state.sizes[index]);
+
+    var promise;
 
     useEffect(() => {
-
+        createStreamHandler();
     }, [currentSong]);
 
     async function createStreamHandler() {
-        console.log("Creating Streamhandler! Current streamhandler is: ");
-        //await loadFile({ currentSong, setDuration })
-        //    .then(newStreamHandler => setStreamHandler(newStreamHandler));
-        await loadFile({ currentSong, setDuration });
-        console.log("Created new streamhandler: ");
+        if (isPlaying) {
+            // destroy existing loadFile promise?
+        }
+        if (currentSong != -1) {
+            console.log("Creating Streamhandler! For this song_url: " + song_url);
+            //await loadFile({ currentSong, setDuration })
+            //    .then(newStreamHandler => setStreamHandler(newStreamHandler));
+            promise = await loadFile({ song_url, setDuration, size });
+            console.log("Created new streamhandler: " + promise);
 
-        //await streamHandler.stop();
-        setPlaying(true);
+
+
+            //await streamHandler.stop();
+            setPlaying(true);
+        }
     }
 
     async function playPauseClicked() {
@@ -35,7 +49,7 @@ function PlayPause() {
             await streamHandler.play();
         }
         */
-        setSong("The Sound of Speed");
+        const stop = await promise.stop();
         setPlaying(!isPlaying);
     }
 
@@ -94,7 +108,7 @@ async function playPauseClicked() {                 // det her må vi godt - sel
     return (
         <div className="playPause">
             <img src={isPlaying ? PausePic : PlayPic} height="50vh" width="40vh" onClick={playPauseClicked} alt="placeholder_text" />
-            
+
         </div>
     );
 
