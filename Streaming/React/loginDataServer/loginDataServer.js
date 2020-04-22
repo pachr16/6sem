@@ -45,7 +45,8 @@ server.get('/checkCred', (req, res) => {
 
             } else {
                 //store result from DB
-                foundUser = new User(result.rows[0].id, result.rows[0].email, result.rows[0].password);
+                console.log("somedata = " + result.rows[0].user_id);
+                foundUser = new User(result.rows[0].user_id, result.rows[0].email, result.rows[0].password);
 
                 //check if email and password match
                 if (askUser.email !== foundUser.email || askUser.password !== foundUser.password) {
@@ -54,7 +55,8 @@ server.get('/checkCred', (req, res) => {
 
                 } else if (askUser.email === foundUser.email && askUser.password === foundUser.password) {
                     console.log("User verified - Login Succesfull!")
-                    res.status(200).send(foundUser.id);
+                    console.log(foundUser.id);
+                    res.status(200).send(foundUser.id + "");
                 }
                 //Called data stored locally ending session
                 client.end();

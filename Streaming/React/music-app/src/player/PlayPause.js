@@ -32,8 +32,6 @@ function PlayPause() {
     async function playPauseClicked() {
         //createStreamHandler();
 
-
-
         /*
         if (isPlaying) {
             await streamHandler.stop();

@@ -1,26 +1,16 @@
 import React from 'react';
 
 function About() {
-    const h2 = {
-        "padding-left": "30px",
-        "font-size": "40px"
-    };
-
-    const p = {
-        "padding-left": "20px",
-        "font-size": "20px"
-    };
-
     const background = {
-        "background-color": "rgb(200, 200, 200)",
+        "backgroundColor": "rgb(200, 200, 200)",
         "padding": "10px"
     };
 
 
     return(
         <div style={background}>
-            <h2 style={h2}>About Us</h2>
-            <p style={p}>
+            <h3>About Us</h3>
+            <p className="misc-p">
                 We are a group of Software Engineering students from the University of Southern Denmark (SDU / Syddansk Universitet),
                  who are currently working on our bachelors project. <br/>
                 This site has been created purely for testing purposes, as a somewhat generic streaming service

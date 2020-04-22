@@ -1,10 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  Switch,
-  Route
-} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import ss from 'socket.io-stream';
 import socketClient from 'socket.io-client';
+import { AuthorizationContext } from './login/AuthorizationContext';
 import Login from './login/Login.js';
 import CreateNewUser from './login/CreateNewUser.js';
 import SingleSong from './browser/SingleSong.js';
@@ -13,10 +11,14 @@ import About from './misc/About.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { addTitle, addSongDur, addSong_url, addSize, addAlbum, addArtist, addArt } from '../redux/actions.js';
 import SongOverview from './browser/SongOverview.js';
+import NotFound from './misc/NotFound.js';
+import AccountSettings from './misc/AccountSettings';
 
 
 
 function Homepage() {
+  const [loggedID, setLoggedID] = useContext(AuthorizationContext);
+
   // these three are only used for testing, should be removed from here
   const titles = useSelector(state => state.titles);
   const albums = useSelector(state => state.albums);
@@ -60,6 +62,14 @@ function Homepage() {
     });
   }
 
+  function requireAuth(destination) {
+    if (loggedID == -1) {
+      return <Login />
+    }
+    return destination;
+  }
+
+
   return (
     <div>
       <Switch>
@@ -67,14 +77,18 @@ function Homepage() {
           <CreateNewUser />
         </Route>
 
-        <Route exact path="/homepage">
-          <SongOverview />
-
-
+        <Route exact path="/account">
+          {requireAuth(<AccountSettings />)}
         </Route>
 
-        <Route exact path="/login">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
+        {/*}
+        <Route exact path="/login">
           <Login />
+        </Route>
+        {*/}
+
+        <Route exact path="/" >
+          {requireAuth(<SongOverview />)}
         </Route>
 
         <Route exact path="/help">
@@ -85,11 +99,16 @@ function Homepage() {
           <About />
         </Route>
 
-        <Route exact path="/">
-          <Login />
-        </Route>
-
         {/* add routes to new components here */}
+
+
+
+
+
+        {/* THIS ONE MUST BE LAST!! */}
+        <Route path="/">
+          <NotFound />
+        </Route>
 
       </Switch>
     </div>
