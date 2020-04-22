@@ -4,7 +4,7 @@ import SkipPic from '../assets/forward.png';
 
 function Skip() {
     return(
-        <img src={SkipPic} height="50vh" alt="skip_button"/>
+        <img src={SkipPic} height="50vh" width="40vh" alt="skip_button"/>
     );
 }
 

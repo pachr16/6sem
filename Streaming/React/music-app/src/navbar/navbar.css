@@ -2,7 +2,7 @@
     background-color: rgb(25, 20, 20);
     display: flex;
     flex-direction: row;
-    min-height: 10vh;
+    min-height: 20vh;
     margin: 0px;
     padding: 0px;
     justify-content: space-around;
@@ -19,4 +19,31 @@
 }
 
 .navLinks {
+}
+
+.player {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+  
+}
+  
+.playPause {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h4 {
+    color: rgb(200, 200, 200);
+}
+
+.albumart {
+    justify-items: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

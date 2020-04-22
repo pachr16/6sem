@@ -3,19 +3,15 @@ import PlayPic from '../assets/play.png';
 import PausePic from '../assets/pause.png';
 import { loadFile } from './Streaming';
 import { StreamingContext } from './StreamingContext';
-import { useSelector } from 'react-redux';
 
 
 function PlayPause() {
     const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);  // streamHandler, setStreamHandler
     //const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
 
-    const titles = useSelector(state => state.titles);
-    const art = useSelector(state => state.arts[titles.indexOf(currentSong)]);
-    
 
     useEffect(() => {
-        
+
     }, [currentSong]);
 
     async function createStreamHandler() {
@@ -40,7 +36,6 @@ function PlayPause() {
         }
         */
         setSong("The Sound of Speed");
-        console.log(art);
         setPlaying(!isPlaying);
     }
 
@@ -97,9 +92,9 @@ async function playPauseClicked() {                 // det her må vi godt - sel
     */
 
     return (
-        <div>
-            <img src={art} height="75vh" alt="missing" />
-            <img src={isPlaying ? PausePic : PlayPic} height="50vh" onClick={playPauseClicked} alt="placeholder_text" />
+        <div className="playPause">
+            <img src={isPlaying ? PausePic : PlayPic} height="50vh" width="40vh" onClick={playPauseClicked} alt="placeholder_text" />
+            
         </div>
     );
 
