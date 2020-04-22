@@ -1,13 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route } from "react-router-dom";
 import ss from 'socket.io-stream';
 import socketClient from 'socket.io-client';
-import { AuthorizationContext } from './login/AuthorizationContext';
 import Login from './login/Login.js';
 import CreateNewUser from './login/CreateNewUser.js';
 import Help from './misc/Help.js';
 import About from './misc/About.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addTitle, addSongDur, addSong_url, addSize, addAlbum, addArtist, addArt, addSongid } from '../redux/actions.js';
 import SongOverview from './browser/SongOverview.js';
 import NotFound from './misc/NotFound.js';
@@ -16,7 +15,7 @@ import AccountSettings from './misc/AccountSettings';
 
 
 function Homepage() {
-  const [loggedID, setLoggedID] = useContext(AuthorizationContext);
+  const loggedID = useSelector(state => state.loggedID);
 
   // this one is needed for running actions on our state
   const dispatch = useDispatch();

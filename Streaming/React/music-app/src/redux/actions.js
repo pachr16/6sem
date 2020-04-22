@@ -63,6 +63,6 @@ export const logIn = (n) => {
 
 export const logOut = () => {
     return {
-        type: "LOG_IN"
+        type: "LOG_OUT"
     }
 }

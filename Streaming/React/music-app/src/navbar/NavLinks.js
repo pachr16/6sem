@@ -1,15 +1,17 @@
 import React, { useContext } from 'react';
 import './navlinks.css';
 import { Link, Redirect } from 'react-router-dom';
-import { AuthorizationContext } from '../homepage/login/AuthorizationContext';
-import Login from '../homepage/login/Login';
+import { useSelector, useDispatch } from 'react-redux';
+import { logOut } from '../redux/actions';
+
 
 //https://codepen.io/Scotho/pen/ygjOPj
 function NavLinks() {
-    const [loggedID, setLoggedID] = useContext(AuthorizationContext);
+    const loggedID = useSelector(state => state.loggedID);
+    const dispatch = useDispatch();
 
-    function logOut() {
-        setLoggedID("-1");
+    function onClickLogOut() {
+        dispatch(logOut());
     }
 
     function logIn() {
@@ -27,7 +29,7 @@ function NavLinks() {
                     <Link to="/about"><li>About</li></Link>
                     <Link to="/help"><li>Help</li></Link>
                     <li className="divider"></li>
-                    {loggedID < 0 ? <li onClick={logIn}>Log in</li> : <li onClick={logOut}>Log out</li>}
+                    {loggedID < 0 ? <li onClick={logIn}>Log in</li> : <li onClick={onClickLogOut}>Log out</li>}
                 </ul>
             </label>
         </span>

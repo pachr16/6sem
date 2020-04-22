@@ -1,5 +1,4 @@
 import React from 'react';
-import { AuthorizationProvider } from './homepage/login/AuthorizationContext';
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import './App.css';
 import FancyNavbar from './navbar/FancyNavbar.js';
@@ -9,7 +8,6 @@ import { StreamingInfoProvider } from './player/StreamingContext';
 
 function App() {
   return (
-    <AuthorizationProvider>
       <StreamingInfoProvider>
         <div className="App">
           <Router>
@@ -27,7 +25,6 @@ function App() {
           </Router>
         </div>
       </StreamingInfoProvider>
-    </AuthorizationProvider>
   );
 }
 

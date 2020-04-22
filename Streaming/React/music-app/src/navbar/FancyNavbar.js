@@ -3,11 +3,11 @@ import './navbar.css';
 import NavigableLogo from './NavigableLogo';
 import NavLinks from './NavLinks';
 import Player from '../player/Player';
-import { AuthorizationContext } from '../homepage/login/AuthorizationContext'; 
+import { useSelector } from 'react-redux';
 
 
 function FancyNavbar(){
-  const [loggedID, setLoggedID] = useContext(AuthorizationContext);
+  const loggedID = useSelector(state => state.loggedID);
 
     return(
         <div className="navBackground">

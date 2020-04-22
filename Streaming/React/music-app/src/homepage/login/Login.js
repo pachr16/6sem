@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthorizationContext } from './AuthorizationContext';
+import { useDispatch } from 'react-redux';
+import { logIn } from '../../redux/actions.js';
 
 function Login() {
-    const [loggedID, setLoggedID] = useContext(AuthorizationContext);
+    const dispatch = useDispatch();
 
 
     // called when clicking the login-button to enter the service
@@ -15,7 +16,7 @@ function Login() {
 
 
         if (resp.status === 200) {
-            setLoggedID(respID);
+            dispatch(logIn(respID));
             return;     // correct react component will render automatically - login was just rendered in front while not authorized
 
         } else if (resp.status === 404) {
