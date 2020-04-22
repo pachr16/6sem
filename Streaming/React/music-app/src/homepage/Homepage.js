@@ -71,7 +71,7 @@ function Homepage() {
 
 
   return (
-    <div>
+    <div className="everything-wrapped">
       <Switch>
         <Route exact path="/createNewUser">
           <CreateNewUser />

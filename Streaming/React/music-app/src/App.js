@@ -15,7 +15,7 @@ function App() {
           <Router>
             {/* header here */}
             <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
-              Generic Unnamed Streaming Service
+             
             </h1>
             <FancyNavbar />
 
