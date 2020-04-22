@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PlayPic from '../assets/play.png';
 import PausePic from '../assets/pause.png';
 import { loadFile } from './Streaming';

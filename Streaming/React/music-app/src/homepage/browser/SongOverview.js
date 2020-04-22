@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import SingleSong from './SingleSong';
 import { useSelector } from 'react-redux';
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './navbar.css';
 import NavigableLogo from './NavigableLogo';
 import NavLinks from './NavLinks';
