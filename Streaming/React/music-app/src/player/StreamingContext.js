@@ -5,7 +5,7 @@ export const StreamingContext = createContext();
 
 export const StreamingInfoProvider = (props) => {
     const [isPlaying, setPlaying] = useState(false);
-    const [currentSong, setSong] = useState('test');
+    const [currentSong, setSong] = useState('Day One');
     const [duration, setDuration] = useState(0);
     //const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration })); // maybe use new Promise() and somehow declare that the promise can contain two methods (play/stop)
                                                             // forslag: Promise.resolve(() => {}, () => {})

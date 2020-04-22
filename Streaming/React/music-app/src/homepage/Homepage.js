@@ -5,20 +5,30 @@ import {
 } from "react-router-dom";
 import ss from 'socket.io-stream';
 import socketClient from 'socket.io-client';
-import { MetaContext } from './browser/MetaContext.js';
 import Login from './login/Login.js';
 import CreateNewUser from './login/CreateNewUser.js';
 import SingleSong from './browser/SingleSong.js';
 import Help from './misc/Help.js';
 import About from './misc/About.js';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { addTitle, addSongDur, addSong_url, addSize, addAlbum, addArtist, addArt } from '../redux/actions.js';
+import SongOverview from './browser/SongOverview.js';
 
 
 
 function Homepage() {
-  const [titles, setTitles, songDurations, setSongDurations, song_urls, setSong_urls, sizes, setSizes, albums, setAlbums, artists, setArtists, arts, setArts] = useContext(MetaContext);
+  // these three are only used for testing, should be removed from here
+  const titles = useSelector(state => state.titles);
+  const albums = useSelector(state => state.albums);
+  const artists = useSelector(state => state.artists);
 
-  useEffect(loadMetaData, []);  // called when the component is mounted (which, unfortunately, is also when re-rendered)
+
+  // this one is needed for running actions on our state
+  const dispatch = useDispatch();
+
+  // called when the component is mounted (which is also when re-rendered)
+  // means metadata for songs is loaded when homepage component is rendered, maybe should move it somewhere else
+  useEffect(loadMetaData, []);
 
   function loadMetaData() {
     const url = "http://localhost:2000";
@@ -32,28 +42,23 @@ function Homepage() {
       console.log("Waiting for data");
       console.log("Got this song: " + info.buffer.title);
 
-      setTitles(titles.push(info.buffer.title));
+      dispatch(addTitle(info.buffer.title));
       console.log(titles);
-      setSongDurations(songDurations.push(info.buffer.duration));
-      setSong_urls(song_urls.push(info.buffer.song_url));
-      setSizes(sizes.push(info.buffer.size));
-      setAlbums(albums.push(info.buffer.album));
-      setArtists(artists.push(info.buffer.artist));
 
+      dispatch(addSongDur(info.buffer.duration));
+      dispatch(addSong_url(info.buffer.song_url));
+      dispatch(addSize(info.buffer.size));
+      dispatch(addAlbum(info.buffer.album));
+      dispatch(addArtist(info.buffer.artist));
       // setting the album art requires some formatting stuff
       var tempImage = new Image();
       tempImage.src = 'data:image/png;base64,' + info.buffer.image;
-      setArts(arts.push(tempImage.src));
+      dispatch(addArt(tempImage.src));
 
-      console.log("Successfully loaded this (and more!):");
-      console.log("Titles: " + titles + "\n Albums: " + albums + "\n Artists: " + artists);
-
-      //document.body.appendChild(playImage);   // this might be useful if we want one component for all songcards
+      //console.log("Successfully loaded this (and more!):");
+      //console.log("Titles: " + titles + "\n Albums: " + albums + "\n Artists: " + artists);
     });
   }
-
-
-  //const songcards = titles.map(song => <SingleSong />);
 
   return (
     <div>
@@ -63,11 +68,9 @@ function Homepage() {
         </Route>
 
         <Route exact path="/homepage">
-          {/*songcards
-          
-          Lidt et problem at vi re-renderer det her component hele tiden, grundet at state ændres når vi loader
-           - overvejer at kigge på om det kan fixes ved at lave det med Redux i stedet */}
-          <SingleSong />
+          <SongOverview />
+
+
         </Route>
 
         <Route exact path="/login">    {/** checks from top to bottom; if we dont use exact path, this one will be shown in cases of 404 - and if it was first, we could never reach any other paths */}
