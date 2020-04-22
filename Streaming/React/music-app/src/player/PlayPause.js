@@ -15,27 +15,26 @@ function PlayPause() {
     const song_url = useSelector(state => state.song_urls[index]);
     const size = useSelector(state => state.sizes[index]);
 
-    var promise;
+
 
     useEffect(() => {
         createStreamHandler();
-    }, [currentSong]);
+    }, [isPlaying]);
 
     async function createStreamHandler() {
-        if (isPlaying) {
-            // destroy existing loadFile promise?
-        }
         if (currentSong != -1) {
-            console.log("Creating Streamhandler! For this song_url: " + song_url);
-            //await loadFile({ currentSong, setDuration })
-            //    .then(newStreamHandler => setStreamHandler(newStreamHandler));
-            promise = await loadFile({ song_url, setDuration, size });
-            console.log("Created new streamhandler: " + promise);
 
+            //if (isPlaying) {
+                console.log("Creating Streamhandler! For this song_url: " + song_url);
+                const promise = await loadFile({ song_url, setDuration, size });
+                console.log("Created new streamhandler: " + promise);
+            //}
 
-
-            //await streamHandler.stop();
-            setPlaying(true);
+            if (!isPlaying) {
+                const stop = await promise.stop();
+            } else {
+                const play = await promise.play(duration);
+            }
         }
     }
 
@@ -49,7 +48,7 @@ function PlayPause() {
             await streamHandler.play();
         }
         */
-        const stop = await promise.stop();
+        //const stop = await promise.stop();
         setPlaying(!isPlaying);
     }
 
