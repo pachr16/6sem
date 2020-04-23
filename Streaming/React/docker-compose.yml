@@ -1,0 +1,27 @@
+version: "3"
+services: 
+   # loginserver:
+    #    container_name: nodeLogin
+     #   build: 
+      #      context: ./loginDataServer
+       #     dockerfile: loginDataServer
+        #stdin_open: true
+    react-app:
+        container_name: react_container
+        build: 
+            context: ./music-app
+            dockerfile: react-app
+        ports: 
+            - 3000:3000
+        volumes: 
+            - ".:/app"
+            - "/app/node_modules"
+        environment: 
+            - NODE_ENV=development
+        stdin_open: true
+    loginserver:
+        container_name: nodeLogin
+        build: 
+            context: ./loginDataServer
+            dockerfile: loginDataServer
+        stdin_open: true

@@ -105,5 +105,5 @@ server.post('/newUser', (req, res) => {
     });
 
 });
-
+console.log("Server listening on 8080")
 server.listen(8080);
