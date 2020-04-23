@@ -25,80 +25,104 @@ function Homepage() {
   useEffect(loadMetaData, []);
 
   function loadMetaData() {
-    const url = "http://localhost:2000";
-    const socket = socketClient.connect(url);
+    fetch('http://localhost:2000/metadata.json',{credentials: 'same-origin'})
+      .then((json => JSON.parse(json)))
+      .then((data) => data.forEach(info => {
 
-    ss(socket).emit('getMetaData', 'thisdoesntmatter', () => {
-      console.log("We've requested metadata!");
-    });
+        console.log("Loaded this song: " + info.buffer.title);
 
-    ss(socket).on('metadata', (info) => {
-      console.log("Loaded this song: " + info.buffer.title);
+        dispatch(addSongid(info.buffer.songid));
+        dispatch(addTitle(info.buffer.title));
+        dispatch(addSongDur(info.buffer.duration));
+        dispatch(addSong_url(info.buffer.song_url));
+        dispatch(addSize(info.buffer.size));
+        dispatch(addAlbum(info.buffer.album));
+        dispatch(addArtist(info.buffer.artist));
+        // setting the album art requires some formatting stuff
+        //var tempImage = new Image();
+        //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
+        //dispatch(addArt(tempImage.src));
 
-      dispatch(addSongid(info.buffer.songid));
-      dispatch(addTitle(info.buffer.title));
-      dispatch(addSongDur(info.buffer.duration));
-      dispatch(addSong_url(info.buffer.song_url));
-      dispatch(addSize(info.buffer.size));
-      dispatch(addAlbum(info.buffer.album));
-      dispatch(addArtist(info.buffer.artist));
-      // setting the album art requires some formatting stuff
-      var tempImage = new Image();
-      tempImage.src = 'data:image/png;base64,' + info.buffer.image;
-      dispatch(addArt(tempImage.src));
-    });
-  }
+      }));
 
-  function requireAuth(destination) {
-    if (loggedID == -1) {
-      return <Login />
-    }
-    return destination;
   }
 
 
-  return (
-    <div className="everything-wrapped">
-      <Switch>
-        <Route exact path="/createNewUser">
-          <CreateNewUser />
-        </Route>
 
-        <Route exact path="/account">
-          {requireAuth(<AccountSettings />)}
-        </Route>
+//   const url = "http://localhost:2000";
+//   const socket = socketClient.connect(url);
 
-        {/*}
+//   ss(socket).emit('getMetaData', 'thisdoesntmatter', () => {
+//     console.log("We've requested metadata!");
+//   });
+
+//   ss(socket).on('metadata', (info) => {
+//     console.log("Loaded this song: " + info.buffer.title);
+
+//     dispatch(addSongid(info.buffer.songid));
+//     dispatch(addTitle(info.buffer.title));
+//     dispatch(addSongDur(info.buffer.duration));
+//     dispatch(addSong_url(info.buffer.song_url));
+//     dispatch(addSize(info.buffer.size));
+//     dispatch(addAlbum(info.buffer.album));
+//     dispatch(addArtist(info.buffer.artist));
+//     // setting the album art requires some formatting stuff
+//     var tempImage = new Image();
+//     tempImage.src = 'data:image/png;base64,' + info.buffer.image;
+//     dispatch(addArt(tempImage.src));
+//   });
+// }
+
+function requireAuth(destination) {
+  if (loggedID == -1) {
+    return <Login />
+  }
+  return destination;
+}
+
+
+return (
+  <div className="everything-wrapped">
+    <Switch>
+      <Route exact path="/createNewUser">
+        <CreateNewUser />
+      </Route>
+
+      <Route exact path="/account">
+        {requireAuth(<AccountSettings />)}
+      </Route>
+
+      {/*}
         <Route exact path="/login">
           <Login />
         </Route>
         {*/}
 
-        <Route exact path="/" >
-          {requireAuth(<SongOverview />)}
-        </Route>
+      <Route exact path="/" >
+        {requireAuth(<SongOverview />)}
+      </Route>
 
-        <Route exact path="/help">
-          <Help />
-        </Route>
+      <Route exact path="/help">
+        <Help />
+      </Route>
 
-        <Route exact path="/about">
-          <About />
-        </Route>
+      <Route exact path="/about">
+        <About />
+      </Route>
 
-        {/* add routes to new components here */}
-
-
+      {/* add routes to new components here */}
 
 
 
-        {/* THIS ONE MUST BE LAST!! */}
-        <Route path="/">
-          <NotFound />
-        </Route>
 
-      </Switch>
-    </div>
-  );
+
+      {/* THIS ONE MUST BE LAST!! */}
+      <Route path="/">
+        <NotFound />
+      </Route>
+
+    </Switch>
+  </div>
+);
 }
 export default Homepage;

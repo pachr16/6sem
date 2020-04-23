@@ -4,11 +4,13 @@ const express = require('express');
 const ss = require('socket.io-stream');
 const path = require('path');
 const app = express();
-
-
-
 //database connection
 const pg = require('pg');
+
+//app.use(bodyParser.json());
+const cors = require('cors');
+app.use(cors());
+app.options('*', cors());
 //or native libpq bindings
 //var pg = require('pg').native
 
@@ -58,11 +60,61 @@ app.get('*', (req, res) => {
 */
 //getMetaData().then((data) => console.log(data));
 
+app.use('/assets', express.static('html/assets/images'))
+
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 app.get('/test', function (req, res) {
   console.log("get method activate!")
+});
+
+app.get('/metadata.json', function (req, res) {
+
+  const db = new pg.Client(conString);
+  console.log("Client has asked for metadata for this song: " + req);
+  var resdata = [];
+
+  db.connect(function (err) {
+    if (err) {
+      console.error('could not connect to postgres', err);
+      res.status(504).send('Database connection error')
+    } else {
+      db.query(
+        'SELECT songs.song_id, songs.title, songs.duration, songs.song_url, songs.size, albums.album_name, albums.art_url, artists.artist_name  FROM songs ' +
+        'JOIN onalbum ON songs.song_id = onalbum.song_id ' +
+        'JOIN albums ON onalbum.album_id = albums.album_id ' +
+        'JOIN createdby ON onalbum.album_id = createdby.album_id ' +
+        'JOIN artists ON  createdby.artist_id = artists.artist_id',
+        (err, result) => {
+          if (err) {
+            res.status(500).send('Database query error')
+            console.error('error running query', err);
+          } else {
+
+            test = result.rows.map((data) =>({              
+                "songid": data.song_id,
+                "title": data.title,
+                "duration": data.duration,
+                "song_url": data.song_url,
+                "size": data.size,
+                "album": data.album_name,
+                "image": data.art_url,
+                "artist": data.artist_name
+              }));
+            
+            // >> output: 2018-08-23T14:02:57.117Z
+            db.end();
+
+            
+            var testjson = JSON.stringify(test)
+            var back = JSON.parse(testjson)
+            console.log(test)
+            res.send(testjson)
+          }
+        });
+    }
+  });
 });
 
 /*
@@ -131,16 +183,18 @@ io.on('connection', client => {
                     } else {
                       console.log("Now emitting image " + data.song_id + " to client!");
 
-                      ss(client).emit('metadata', { buffer: {
-                        "songid": data.song_id,
-                        "title": data.title,
-                        "duration": data.duration,
-                        "song_url": data.song_url,
-                        "size": data.size,
-                        "album": data.album_name,
-                        "image": fileData.toString('base64'),   // art_url has turned into this - base64 encoded because its an image
-                        "artist": data.artist_name
-                      }});
+                      ss(client).emit('metadata', {
+                        buffer: {
+                          "songid": data.song_id,
+                          "title": data.title,
+                          "duration": data.duration,
+                          "song_url": data.song_url,
+                          "size": data.size,
+                          "album": data.album_name,
+                          "image": fileData.toString('base64'),   // art_url has turned into this - base64 encoded because its an image
+                          "artist": data.artist_name
+                        }
+                      });
                     }
                   });
               });
