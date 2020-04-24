@@ -32,27 +32,7 @@ function Homepage() {
       .then((response => response.json()))
       .then((json => JSON.parse(json)))
       .then((data) => insertData(data));
-
-        // data.forEach(info => {
-
-        //   console.log("Loaded this song: " + info.buffer.title);
-
-        //   dispatch(addSongid(info.buffer.songid));
-        //   dispatch(addTitle(info.buffer.title));
-        //   dispatch(addSongDur(info.buffer.duration));
-        //   dispatch(addSong_url(info.buffer.song_url));
-        //   dispatch(addSize(info.buffer.size));
-        //   dispatch(addAlbum(info.buffer.album));
-        //   dispatch(addArtist(info.buffer.artist));
-        //   // setting the album art requires some formatting stuff
-        //   //var tempImage = new Image();
-        //   //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
-        //   //dispatch(addArt(tempImage.src));
-
-        // })
-      
-
-  }
+    }
 
 function insertData(data){
   data.forEach(info => {
