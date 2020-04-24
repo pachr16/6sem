@@ -10,10 +10,11 @@ function createUser() {
         document.getElementById('responseText').innerHTML = "Please fill in all fields!";
 
     } else {
-        fetch("http://localhost:8080/newUser?email=" + document.getElementById("emailField").value +
+        fetch("http://192.168.99.100:8080/newUser?email=" + document.getElementById("emailField").value +
             "&password=" + document.getElementById("passField").value,
             {
-                method: 'POST'
+                method: 'POST',
+                credentials: 'same-origin'
             })
             .then(resp => {
                 if (resp.status === 200) {
