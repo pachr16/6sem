@@ -1,15 +1,18 @@
 FROM node:alpine
 
-WORKDIR /logindataserver
+WORKDIR /app
 
-COPY package.json /logindataserver
+COPY package.json ./package.json
+COPY package-lock.json ./package-lock.json
 
 RUN npm install
 
-COPY . /logindataserver
+COPY . .
+
+EXPOSE 8080
 
 CMD ["node" ,"loginDataServer.js"]
 
-EXPOSE 8080
+
 
 

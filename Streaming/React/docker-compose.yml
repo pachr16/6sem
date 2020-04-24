@@ -1,11 +1,5 @@
 version: "3"
 services: 
-    loginserver:
-        container_name: nodeLogin
-        build: 
-            context: ./loginDataServer
-            dockerfile: loginDataServer
-        stdin_open: true
     react-app:
         container_name: react_container
         build: 
@@ -24,4 +18,7 @@ services:
         build: 
             context: ./loginDataServer
             dockerfile: loginDataServer
-        stdin_open: true
+        ports: 
+            - 8080:8080
+        environment: 
+            - NODE_ENV=development
