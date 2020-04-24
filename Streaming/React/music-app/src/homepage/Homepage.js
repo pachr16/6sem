@@ -12,6 +12,9 @@ import SongOverview from './browser/SongOverview.js';
 import NotFound from './misc/NotFound.js';
 import AccountSettings from './misc/AccountSettings';
 
+// make this a final atribute
+const metaServer = 'http://localhost:2000'
+
 
 
 function Homepage() {
@@ -25,28 +28,51 @@ function Homepage() {
   useEffect(loadMetaData, []);
 
   function loadMetaData() {
-    fetch('http://localhost:2000/metadata.json',{credentials: 'same-origin'})
+    fetch(metaServer+'/metadata.json', {credentials: 'same-origin'})
+      .then((response => response.json()))
       .then((json => JSON.parse(json)))
-      .then((data) => data.forEach(info => {
+      .then((data) => insertData(data));
 
-        console.log("Loaded this song: " + info.buffer.title);
+        // data.forEach(info => {
 
-        dispatch(addSongid(info.buffer.songid));
-        dispatch(addTitle(info.buffer.title));
-        dispatch(addSongDur(info.buffer.duration));
-        dispatch(addSong_url(info.buffer.song_url));
-        dispatch(addSize(info.buffer.size));
-        dispatch(addAlbum(info.buffer.album));
-        dispatch(addArtist(info.buffer.artist));
-        // setting the album art requires some formatting stuff
-        //var tempImage = new Image();
-        //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
-        //dispatch(addArt(tempImage.src));
+        //   console.log("Loaded this song: " + info.buffer.title);
 
-      }));
+        //   dispatch(addSongid(info.buffer.songid));
+        //   dispatch(addTitle(info.buffer.title));
+        //   dispatch(addSongDur(info.buffer.duration));
+        //   dispatch(addSong_url(info.buffer.song_url));
+        //   dispatch(addSize(info.buffer.size));
+        //   dispatch(addAlbum(info.buffer.album));
+        //   dispatch(addArtist(info.buffer.artist));
+        //   // setting the album art requires some formatting stuff
+        //   //var tempImage = new Image();
+        //   //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
+        //   //dispatch(addArt(tempImage.src));
+
+        // })
+      
 
   }
 
+function insertData(data){
+  data.forEach(info => {
+
+    console.log("Loaded this song: " + info.title);
+
+    dispatch(addSongid(info.songid));
+    dispatch(addTitle(info.title));
+    dispatch(addSongDur(info.duration));
+    dispatch(addSong_url(info.song_url));
+    dispatch(addSize(info.bize));
+    dispatch(addAlbum(info.album));
+    dispatch(addArtist(info.artist));
+    // setting the album art requires some formatting stuff
+    //var tempImage = new Image();
+    //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
+    dispatch(addArt(metaServer+'/assets/'+info.image_url));
+
+  })
+}
 
 
 //   const url = "http://localhost:2000";
