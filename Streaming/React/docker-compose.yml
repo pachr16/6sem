@@ -1,11 +1,11 @@
 version: "3"
 services: 
-   # loginserver:
-    #    container_name: nodeLogin
-     #   build: 
-      #      context: ./loginDataServer
-       #     dockerfile: loginDataServer
-        #stdin_open: true
+    loginserver:
+        container_name: nodeLogin
+        build: 
+            context: ./loginDataServer
+            dockerfile: loginDataServer
+        stdin_open: true
     react-app:
         container_name: react_container
         build: 
