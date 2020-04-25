@@ -11,7 +11,7 @@ function Login() {
     const loginButton = async () => {
 
         // call server and check credentials
-        let resp = await fetch("http://192.168.99.100:8080/checkCred?email=" + document.getElementById("emailField").value + "&password=" + document.getElementById('passwordField').value, {credentials: 'same-origin'});
+        let resp = await fetch("http://localhost:8080/checkCred?email=" + document.getElementById("emailField").value + "&password=" + document.getElementById('passwordField').value, {credentials: 'same-origin'});
         let respID = await resp.text();
 
 
