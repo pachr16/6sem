@@ -38,7 +38,7 @@ function insertData(data){
     dispatch(addTitle(info.title));
     dispatch(addSongDur(info.duration));
     dispatch(addSong_url(info.song_url));
-    dispatch(addSize(info.bize));
+    dispatch(addSize(info.size));
     dispatch(addAlbum(info.album));
     dispatch(addArtist(info.artist));
     // setting the album art requires some formatting stuff

@@ -1,10 +1,9 @@
 import ss from 'socket.io-stream';
 import socketClient from 'socket.io-client';
 import { withWaveHeader, appendBuffer } from './waveHeader';
+import { MUSIC_SERVER } from '../env_vars.js';
 
-const url = "http://localhost:2000";
-
-const socket = socketClient.connect(url);
+const socket = socketClient.connect(MUSIC_SERVER);
 
 const getAudioContext = () => {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();  // is not allowed to start before the user interacts with the site
