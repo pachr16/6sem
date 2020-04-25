@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 2000
 
-CMD ["node", "musicServer"]
+CMD ["node", "server.js"]
