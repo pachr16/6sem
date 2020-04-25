@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from "react-router-dom";
-import ss from 'socket.io-stream';
-import socketClient from 'socket.io-client';
 import Login from './login/Login.js';
 import CreateNewUser from './login/CreateNewUser.js';
 import Help from './misc/Help.js';
@@ -11,10 +9,7 @@ import { addTitle, addSongDur, addSong_url, addSize, addAlbum, addArtist, addArt
 import SongOverview from './browser/SongOverview.js';
 import NotFound from './misc/NotFound.js';
 import AccountSettings from './misc/AccountSettings';
-
-// make this a final atribute
-const metaServer = 'http://localhost:2000'
-
+import { MUSIC_SERVER } from '../env_vars.js';
 
 
 function Homepage() {
@@ -28,7 +23,7 @@ function Homepage() {
   useEffect(loadMetaData, []);
 
   function loadMetaData() {
-    fetch(metaServer+'/metadata.json', {credentials: 'same-origin'})
+    fetch(`${MUSIC_SERVER}/metadata.json`, {credentials: 'same-origin'})
       .then((response => response.json()))
       .then((json => JSON.parse(json)))
       .then((data) => insertData(data));
@@ -49,9 +44,8 @@ function insertData(data){
     // setting the album art requires some formatting stuff
     //var tempImage = new Image();
     //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
-    dispatch(addArt(metaServer+'/assets/'+info.image_url));
-
-  })
+    dispatch(addArt(`${MUSIC_SERVER}/assets/${info.image_url}`));
+  });
 }
 
 

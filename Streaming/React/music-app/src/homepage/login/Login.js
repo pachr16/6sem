@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logIn } from '../../redux/actions.js';
+import { LOGIN_SERVER } from '../../env_vars.js';
 
 function Login() {
     const dispatch = useDispatch();
@@ -9,9 +10,13 @@ function Login() {
 
     // called when clicking the login-button to enter the service
     const loginButton = async () => {
-
+        
         // call server and check credentials
-        let resp = await fetch("http://localhost:8080/checkCred?email=" + document.getElementById("emailField").value + "&password=" + document.getElementById('passwordField').value, {credentials: 'same-origin'});
+        console.log(`${LOGIN_SERVER}/checkCred?email=${document.getElementById("emailField").value}&password=${document.getElementById('passwordField').value}`);
+        let resp = await fetch(`${LOGIN_SERVER}/checkCred?email=${document.getElementById("emailField").value}&password=${document.getElementById('passwordField').value}`,
+            {
+                credentials: 'same-origin'
+            });
         let respID = await resp.text();
 
 
@@ -24,7 +29,7 @@ function Login() {
 
         } else if (resp.status === 401) {
             document.getElementById("warnText").innerHTML = "Login failed! (Probably due to wrong password, the email exists)";
-            
+
         }
         // clearing textfields
         document.getElementById("emailField").value = "";

@@ -7,14 +7,14 @@ import { StreamingInfoProvider } from './player/StreamingContext';
 
 
 function App() {
+
   return (
       <StreamingInfoProvider>
         <div className="App">
           <Router>
             {/* header here */}
-            <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet">
-             
-            </h1>
+            <h1 className="thisIsFormattingForTheMainTitleOfTheGenericUnnamedStreamingServiceThatWeHaventMadeYet"></h1>
+
             <FancyNavbar />
 
             {/* body below here */}

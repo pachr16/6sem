@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { LOGIN_SERVER } from '../../env_vars.js';
 
 
 function createUser() {
@@ -10,19 +11,17 @@ function createUser() {
         document.getElementById('responseText').innerHTML = "Please fill in all fields!";
 
     } else {
-        fetch("http://192.168.99.100:8080/newUser?email=" + document.getElementById("emailField").value +
-            "&password=" + document.getElementById("passField").value,
+        fetch(`${LOGIN_SERVER}/newUser?email=${document.getElementById("emailField").value}&password=${document.getElementById("passField").value}`,
             {
                 method: 'POST',
                 credentials: 'same-origin'
-            })
-            .then(resp => {
+            }).then(resp => {
                 if (resp.status === 200) {
-                    document.getElementById('responseText').style.color="black";
-                    document.getElementById('responseText').innerHTML="User has been registered! You can now go back to login.";
+                    document.getElementById('responseText').style.color = "black";
+                    document.getElementById('responseText').innerHTML = "User has been registered! You can now go back to login.";
                 }
                 else {
-                    document.getElementById('responseText').innerHTML="Error! I think that email already exists in the system!";
+                    document.getElementById('responseText').innerHTML = "Error! I think that email already exists in the system!";
                 }
             });
 
