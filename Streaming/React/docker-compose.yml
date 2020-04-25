@@ -1,40 +1,41 @@
 version: "3"
-services: 
-    react-app:
-        container_name: react_container
-        build: 
-            context: ./music-app
-            dockerfile: react-app
-        ports: 
-            - 3000:3000
-        volumes: 
-            - ".:/app"
-            - "/app/node_modules"
-        environment: 
-            - NODE_ENV=development
-        stdin_open: true
-    # proxy:
-    #     image: nginx
-    #     ports:
-    #         - '80:80'
-    #     volumes:
-    #         - ./test/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+services:
+    #react-app:
+    #    container_name: react_container
+    #    build:
+    #        context: ./music-app
+    #        dockerfile: react-app
+    #   ports:
+    #       - 3000:3000
+    #   volumes:
+    #       - ".:/app"
+    #       - "/app/node_modules"
+    #   environment:
+    #       - NODE_ENV=development
+    #   stdin_open: true
+    serverproxy:
+        image: nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./serverProxy/default.conf:/etc/nginx/conf.d/default.conf:ro
     #         - ./test/html/:/usr/share/nginx/html/:ro
     loginserver:
         container_name: nodeLogin
-        build: 
+        build:
             context: ./loginDataServer
             dockerfile: loginDataServer
-        ports: 
+        ports:
             - 8080:8080
-        environment: 
+        environment:
             - NODE_ENV=development
     musicserver:
         container_name: nodeMusic
-        build: 
+        build:
             context: ./musicServer
             dockerfile: musicServer
-        ports: 
+        ports:
             - 2000:2000
-        environment: 
+        environment:
             - NODE_ENV=development
