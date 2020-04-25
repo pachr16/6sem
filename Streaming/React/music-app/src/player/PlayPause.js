@@ -1,14 +1,22 @@
 import React, { useContext, useEffect } from 'react';
 import PlayPic from '../assets/play.png';
+import PlayPicGrey from '../assets/play_grey.png';
 import PausePic from '../assets/pause.png';
+import PausePicGrey from '../assets/pause_grey.png';
 import { loadFile } from './Streaming';
 import { StreamingContext } from './StreamingContext';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { startPlaying, startLoading, stopLoading, stopPlaying } from '../redux/actions';
 
 
 function PlayPause() {
-    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);  // streamHandler, setStreamHandler
-    //const [streamHandler, setStreamHandler] = useState(loadFile({ currentSong, setDuration }));
+    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration, isLoading, setLoading] = useContext(StreamingContext);
+
+    const dispatch = useDispatch();
+
+    //const isPlaying = useSelector(state => state.isPlaying);
+    //const isLoading = useSelector(state => state.isLoading);
+    const hasBeenPaused = useSelector(state => state.hasBeenPaused);
 
     const songids = useSelector(state => state.songids);
     const index = songids.indexOf(currentSong);
@@ -18,23 +26,24 @@ function PlayPause() {
 
 
     useEffect(() => {
+        console.log("useEffect triggered!");
         createStreamHandler();
-    }, [isPlaying]);
+    }, [currentSong]);
 
     async function createStreamHandler() {
         if (currentSong != -1) {
 
             //if (isPlaying) {
-                console.log("Creating Streamhandler! For this song_url: " + song_url);
-                const promise = await loadFile({ song_url, setDuration, size });
-                console.log("Created new streamhandler: " + promise);
-            //}
 
-            if (!isPlaying) {
-                const stop = await promise.stop();
-            } else {
-                const play = await promise.play(duration);
-            }
+            setLoading(true);
+
+            console.log("Creating Streamhandler! For this song_url: " + song_url);
+            const promise = await loadFile({ song_url, setDuration, size });
+            console.log("Created new streamhandler: " + promise);
+
+            setLoading(false);
+
+            //}
         }
     }
 
@@ -49,7 +58,21 @@ function PlayPause() {
         }
         */
         //const stop = await promise.stop();
+
+
+
+        //setLoading(!isLoading);
         setPlaying(!isPlaying);
+
+
+        if (!isLoading) {
+            //dispatch(startLoading());
+        } else {
+            //dispatch(stopLoading());
+        }
+
+
+        //dispatch(stopPlaying());
     }
 
     /*
@@ -104,9 +127,27 @@ async function playPauseClicked() {                 // det her må vi godt - sel
 }
     */
 
+    function selectPlayPausePic() {
+        if (isPlaying) {
+            if (isLoading) {
+                return PlayPicGrey;
+            } else {
+                return PlayPic;
+            }
+        } else {
+            if (isLoading) {
+                return PausePicGrey;
+            } else {
+                return PausePic;
+            }
+        }
+    }
+
+    //isPlaying ? (isLoading ? PlayPic : PlayPicGrey) : (isLoading ? PausePic : PausePicGrey)
+
     return (
         <div className="playPause">
-            <img src={isPlaying ? PausePic : PlayPic} height="50vh" width="40vh" onClick={playPauseClicked} alt="placeholder_text" />
+            <img src={isPlaying ? isLoading ? PausePicGrey : PausePic : PlayPic} height="50vh" width="40vh" onClick={playPauseClicked} alt="placeholder_text" />
 
         </div>
     );

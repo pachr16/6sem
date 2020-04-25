@@ -12,7 +12,6 @@ function Login() {
     const loginButton = async () => {
         
         // call server and check credentials
-        console.log(`${LOGIN_SERVER}/checkCred?email=${document.getElementById("emailField").value}&password=${document.getElementById('passwordField').value}`);
         let resp = await fetch(`${LOGIN_SERVER}/checkCred?email=${document.getElementById("emailField").value}&password=${document.getElementById('passwordField').value}`,
             {
                 credentials: 'same-origin'

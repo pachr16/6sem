@@ -86,9 +86,48 @@ export const artists = (state = [], action) => {
 export const loggedID = (state = -1, action) => {
     switch (action.type) {
         case "LOG_IN":
-            return action.payload;
+            return state = action.payload;
         case "LOG_OUT":
-            return -1;
+            return state = -1;
+        default:
+            return state;
+    }
+}
+
+// currently unused
+export const isPlaying = (state = false, action) => {
+    switch (action.type) {
+        case "START_PLAYING":
+            state = true;
+            return clone(state);
+        case "STOP_PLAYING":
+            state = false;
+            return clone(state)
+        default:
+            return state;
+    }
+}
+
+// currently unused
+export const isLoading = (state = false, action) => {
+    switch (action.type) {
+        case "START_LOADING":
+            state = true;
+            return clone(state);
+        case "STOP_LOADING":
+            state = false;
+            return clone(state);
+        default:
+            return state;
+    }
+}
+
+export const hasBeenPaused = (state = false, action) => {
+    switch (action.type) {
+        case "NEW_SONG":
+            return state = false;
+        case "PAUSED":
+            return state = true;
         default:
             return state;
     }

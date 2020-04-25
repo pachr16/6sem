@@ -66,3 +66,43 @@ export const logOut = () => {
         type: "LOG_OUT"
     }
 }
+
+// currently unused
+export const startPlaying = () => {
+    return {
+        type: "START_PLAYING"
+    }
+}
+
+// currently unused
+export const stopPlaying = () => {
+    return {
+        type: "STOP_PLAYING"
+    }
+}
+
+// currently unused
+export const startLoading = () => {
+    return {
+        type: "START_LOADING"
+    }
+}
+
+// currently unused
+export const stopLoading = () => {
+    return {
+        type: "STOP_LOADING"
+    }
+}
+
+export const newSong = () => {
+    return {
+        type: "NEW_SONG"
+    }
+}
+
+export const pause = () => {
+    return {
+        type: "PAUSED"
+    }
+}
