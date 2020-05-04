@@ -1,5 +1,3 @@
-import { loadFile } from "../player/Streaming";
-
 function clone (src) {
     return JSON.parse(JSON.stringify(src));
 }
@@ -126,15 +124,6 @@ export const hasBeenPaused = (state = false, action) => {
             return state = false;
         case "PAUSED":
             return state = true;
-        default:
-            return state;
-    }
-}
-
-export const streamHandler = (state = null, action) => {
-    switch(action.type) {
-        case "START_SONG":
-            return state = loadFile( action.song_url, action.setDuration, action.size );
         default:
             return state;
     }

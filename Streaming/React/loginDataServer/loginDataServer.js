@@ -17,14 +17,14 @@ server.options('*', cors());
 
 // for receiving a login request, checking whether the credentials are correct
 server.get('/checkCred', (req, res) => {
-    //Create new client
-    const client = new pg.Client(conString);
+    //Create new dbclient
+    const db = new pg.Client(conString);
 
     let askUser = new User(undefined, (req.query.email).toLowerCase(), req.query.password); //user login data
     let foundUser; //will be set when db responds
 
-    client.connect(function (err) {
-        console.log("client connected");
+    db.connect(function (err) {
+        console.log("db connected");
 
         if (err) {
             //Cannot connect to DataBase for some reason
@@ -32,7 +32,7 @@ server.get('/checkCred', (req, res) => {
             res.status(500).send("500 - Internal Server Error");
         }
 
-        client.query('SELECT * from users WHERE email = $1', [askUser.email], function (err, result) {
+        db.query('SELECT * from users WHERE email = $1', [askUser.email], function (err, result) {
             if (err) {
                 //cannot resolve query due to unexisting table etc.
                 console.log("Fatal " + err);
@@ -59,8 +59,8 @@ server.get('/checkCred', (req, res) => {
                     res.status(200).send(foundUser.id + "");
                 }
                 //Called data stored locally ending session
-                client.end();
-                console.log("client ended");
+                db.end();
+                console.log("db connection ended");
 
             }
 
@@ -75,18 +75,18 @@ server.get('/checkCred', (req, res) => {
 
 // for creating a new user in the system
 server.post('/newUser', (req, res) => {
-    const client = new pg.Client(conString);
+    const db = new pg.Client(conString);
     let newUser = new User(undefined, (req.query.email).toLowerCase(), req.query.password); //users.find(u => u.email == req.query.email);
 
-    client.connect(function (err) {
-        console.log("client connected");
+    db.connect(function (err) {
+        console.log("db connected");
         if (err) {
             //Cannot connect to DataBase for some reason
             console.error('could not connect to DataBase - Try again later.', err);
             //res.status(500).send("500 - Internal Server Error");
         }
 
-        client.query("INSERT INTO users(email, password) VALUES($1, $2)", [newUser.email, newUser.password], function (err, result) {
+        db.query("INSERT INTO users(email, password) VALUES($1, $2)", [newUser.email, newUser.password], function (err, result) {
             if (err) {
                 if (err == 'error: duplicate key value violates unique constraint "users_email_key"') {
                     console.log("403 - Mail already exist");
@@ -99,8 +99,8 @@ server.post('/newUser', (req, res) => {
                 console.log("SUCCESS!!");
                 res.status(200).send("Success! - User created!");
             }
-            client.end();
-            console.log("client ended");
+            db.end();
+            console.log("db connection ended");
         });
     });
 
