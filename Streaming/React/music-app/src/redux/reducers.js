@@ -118,6 +118,7 @@ export const isLoading = (state = false, action) => {
     }
 }
 
+// currently unused
 export const hasBeenPaused = (state = false, action) => {
     switch (action.type) {
         case "NEW_SONG":

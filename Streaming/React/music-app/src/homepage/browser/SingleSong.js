@@ -1,15 +1,12 @@
 import React, { useContext } from 'react'
 import { useSelector } from 'react-redux';
 import { StreamingContext } from '../../player/StreamingContext.js';
-import { useDispatch } from 'react-redux';
-import { startPlaying } from '../../redux/actions.js';
 
 
 /* for displaying the cards with info about each song, to be shown in an overview list */
 function SingleSong(props) {
     const [isPlaying, setPlaying, currentSong, setSong] = useContext(StreamingContext);
 
-    const dispatch = useDispatch();
     const songid = useSelector(state => state.songids[props.val]);
     const art = useSelector(state => state.arts[props.val]);
     const artist = useSelector(state => state.artists[props.val]);
@@ -17,16 +14,12 @@ function SingleSong(props) {
     const title = useSelector(state => state.titles[props.val]);
     const songDuration = useSelector(state => state.songDurations[props.val]);
 
-    console.log("This is SingleSong component number: " + props.val);
-
-
     function selectSong() {
         console.log("We have clicked/selected this song: " + title);
 
         setSong(songid);
         setPlaying(true);
 
-        //dispatch(startPlaying());
     }
 
     return (

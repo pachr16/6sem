@@ -15,11 +15,11 @@ import { MUSIC_SERVER } from '../env_vars.js';
 function Homepage() {
   const loggedID = useSelector(state => state.loggedID);
 
-  // this one is needed for running actions on our state
+  // for running actions on our state
   const dispatch = useDispatch();
 
   // called when the component is mounted (which is also when re-rendered)
-  // means metadata for songs is loaded when homepage component is rendered, maybe should move it somewhere else
+  // means metadata for songs is loaded when homepage component is rendered
   useEffect(loadMetaData, []);
 
   function loadMetaData() {
@@ -41,9 +41,6 @@ function insertData(data){
     dispatch(addSize(info.size));
     dispatch(addAlbum(info.album));
     dispatch(addArtist(info.artist));
-    // setting the album art requires some formatting stuff
-    //var tempImage = new Image();
-    //tempImage.src = 'data:image/png;base64,' + info.buffer.image;
     dispatch(addArt(`${MUSIC_SERVER}/assets/${info.image_url}`));
   });
 }
@@ -92,12 +89,6 @@ return (
         {requireAuth(<AccountSettings />)}
       </Route>
 
-      {/*}
-        <Route exact path="/login">
-          <Login />
-        </Route>
-        {*/}
-
       <Route exact path="/" >
         {requireAuth(<SongOverview />)}
       </Route>
@@ -125,4 +116,5 @@ return (
   </div>
 );
 }
+
 export default Homepage;

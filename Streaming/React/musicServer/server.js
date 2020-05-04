@@ -1,7 +1,6 @@
 const http = require('http');
 const fileSystem = require('fs');
 const express = require('express');
-const ss = require('socket.io-stream');
 const path = require('path');
 const app = express();
 
@@ -18,8 +17,6 @@ const conString = "postgresql://uzbxyxyi:j7b-g-qv6fw30KkL0dAkN1CMrPMg1sPs@balara
 app.use('/assets', express.static('assets/images'));
 
 var server = http.createServer(app);
-var io = require('socket.io').listen(server);
-
 
 app.get('/metadata.json', function (req, res) {
 
@@ -66,35 +63,25 @@ app.get('/metadata.json', function (req, res) {
 });
 
 
-io.on('error', (error) => {
-  console.log(error);
-});
+app.get('playSong', (req, res) => {
+  console.log("Received request to stream this song: " + req.query.song);
+  console.log("Requested segment is: " + req.query.segment);
 
-io.on('connection', client => {
-  console.log('a user connected');
+  const filePath = path.resolve(__dirname, './assets', './music', req.query.song + '.mp3');
+  console.log("Looking for file at: " + filePath);
 
-  ss(client).on('disconnect', function () {
-    console.log('User disconnected');
-  });
+  const stat = fileSystem.statSync(filePath, { bigint: true });   // we need the size to divide into segments in the same way as frontend
 
-  ss(client).on('getSong', (data, stream) => {
-    console.log("Client requested this song: " + data);
+  const totalSegments = stat.size / 200000;   // 200 kb in each segment - like on frontend
 
-    const filePath = path.resolve(__dirname, './assets', './music', data + '.wav');
-    console.log("Looking for file at: " + filePath);
+  const readStream = fileSystem.createReadStream(filePath);   // is this the easiest way?
+  
 
-    const stat = fileSystem.statSync(filePath, { bigint: true });
-    console.log("Filesize: " + stat.size);
+  // read stream
+  // seperate to segments
+  // find the specified segment
+  // send it in the response
 
-    const readStream = fileSystem.createReadStream(filePath);
-
-    //const stream = ss.createStream();
-    readStream.pipe(stream);
-
-    //ss(client).emit('songStream', stream, { stat });
-
-    //stream.destroy();   //maybe????
-  });
 });
 
 

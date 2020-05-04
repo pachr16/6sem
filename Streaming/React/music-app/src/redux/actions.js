@@ -95,12 +95,14 @@ export const stopLoading = () => {
     }
 }
 
+// currently unused
 export const newSong = () => {
     return {
         type: "NEW_SONG"
     }
 }
 
+// currently unused
 export const pause = () => {
     return {
         type: "PAUSED"
