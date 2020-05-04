@@ -1,3 +1,5 @@
+import { loadFile } from "../player/Streaming";
+
 function clone (src) {
     return JSON.parse(JSON.stringify(src));
 }
@@ -98,11 +100,9 @@ export const loggedID = (state = -1, action) => {
 export const isPlaying = (state = false, action) => {
     switch (action.type) {
         case "START_PLAYING":
-            state = true;
-            return clone(state);
+            return state = true;
         case "STOP_PLAYING":
-            state = false;
-            return clone(state)
+            return state = false;
         default:
             return state;
     }
@@ -112,11 +112,9 @@ export const isPlaying = (state = false, action) => {
 export const isLoading = (state = false, action) => {
     switch (action.type) {
         case "START_LOADING":
-            state = true;
-            return clone(state);
+            return state = true;
         case "STOP_LOADING":
-            state = false;
-            return clone(state);
+            return state = false;
         default:
             return state;
     }
@@ -128,6 +126,15 @@ export const hasBeenPaused = (state = false, action) => {
             return state = false;
         case "PAUSED":
             return state = true;
+        default:
+            return state;
+    }
+}
+
+export const streamHandler = (state = null, action) => {
+    switch(action.type) {
+        case "START_SONG":
+            return state = loadFile( action.song_url, action.setDuration, action.size );
         default:
             return state;
     }

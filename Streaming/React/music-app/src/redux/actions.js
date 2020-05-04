@@ -106,3 +106,12 @@ export const pause = () => {
         type: "PAUSED"
     }
 }
+
+export const startSong = (song_url, setDuration, size) => {
+    return {
+        type: "START_SONG",
+        song_url: song_url,
+        setDuration: setDuration,
+        size: size
+    }
+}
