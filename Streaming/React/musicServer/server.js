@@ -80,7 +80,8 @@ app.get('/playSong', (req, res) => {
   readStream.on('data', (chunk) => {
     counter++;
     if (counter == req.query.segment) {
-      console.log("Sending segment number: " + counter);
+      console.log("Sending segment " + counter);
+      console.log("This segment is of length " + chunk.length);
       res.status(200).send(chunk);
       res.end();
     }
