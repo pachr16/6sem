@@ -14,6 +14,8 @@ app.options('*', cors());
 const conString = "postgresql://uzbxyxyi:j7b-g-qv6fw30KkL0dAkN1CMrPMg1sPs@balarama.db.elephantsql.com:5432/uzbxyxyi" //Can be found in the Details page
 
 
+const SEGMENT_SIZE = 200000;    // size of each segment sent of a song being streamed
+
 app.use('/assets', express.static('assets/images'));
 
 var server = http.createServer(app);
@@ -21,8 +23,7 @@ var server = http.createServer(app);
 app.get('/metadata.json', function (req, res) {
 
   const db = new pg.Client(conString);
-  console.log("Client has asked for metadata for this song: " + req);
-  var resdata = [];
+  console.log("Client has asked for metadata");
 
   db.connect(function (err) {
     if (err) {
@@ -39,23 +40,23 @@ app.get('/metadata.json', function (req, res) {
           if (err) {
             res.status(500).send('Database query error')
             console.error('error running query', err);
-          } else {
+          }
+          else {
+            metadata = result.rows.map((data) => ({
+              "songid": data.song_id + "",
+              "title": data.title,
+              "duration": data.duration,
+              "song_url": data.song_url,
+              "size": data.size,
+              "album": data.album_name,
+              "image_url": data.art_url,
+              "artist": data.artist_name
+            }));
 
-            test = result.rows.map((data) =>({              
-                "songid": data.song_id+"",
-                "title": data.title,
-                "duration": data.duration,
-                "song_url": data.song_url,
-                "size": data.size,
-                "album": data.album_name,
-                "image_url": data.art_url,
-                "artist": data.artist_name
-              }));
-            
             db.end();
-            
-            var testjson = JSON.stringify(test);
-            res.json(testjson);
+
+            var json = JSON.stringify(metadata);
+            res.json(json);
           }
         });
     }
@@ -63,24 +64,27 @@ app.get('/metadata.json', function (req, res) {
 });
 
 
-app.get('playSong', (req, res) => {
+app.get('/playSong', (req, res) => {
   console.log("Received request to stream this song: " + req.query.song);
   console.log("Requested segment is: " + req.query.segment);
 
   const filePath = path.resolve(__dirname, './assets', './music', req.query.song + '.mp3');
-  console.log("Looking for file at: " + filePath);
+  const stat = fileSystem.statSync(filePath);   // we need the size to divide into segments in the same way as frontend
 
-  const stat = fileSystem.statSync(filePath, { bigint: true });   // we need the size to divide into segments in the same way as frontend
+  // 200 kb in each segment - like on frontend
+  const totalSegments = (stat.size / SEGMENT_SIZE) + 1;   // +1 to ensure we also send the last not-fully-sized segment
 
-  const totalSegments = stat.size / 200000;   // 200 kb in each segment - like on frontend
+  const readStream = fileSystem.createReadStream(filePath, { highWaterMark: SEGMENT_SIZE });   // is this the easiest way?
 
-  const readStream = fileSystem.createReadStream(filePath);   // is this the easiest way?
-  
-
-  // read stream
-  // seperate to segments
-  // find the specified segment
-  // send it in the response
+  let counter = 0;
+  readStream.on('data', (chunk) => {
+    counter++;
+    if (counter == req.query.segment) {
+      console.log("Sending segment number: " + counter);
+      res.status(200).send(chunk);
+      res.end();
+    }
+  });
 
 });
 

@@ -17,14 +17,19 @@ function Player() {
     const song_url = useSelector(state => state.song_urls[index]);
     const size = useSelector(state => state.sizes[index]);
 
-    // for the actual audio handling
-    const audio = document.getElementById("audio");
-    const mediaSource = new MediaSource();
-    const mediaSourceURL = URL.createObjectURL(mediaSource);
-    audio.src = mediaSourceURL;
+    // setup for the actual audio handling
+    const audio = document.createElement('audio');
+    var mediaSource = new MediaSource();
+    var audioSourceBuffer;
+    mediaSource.addEventListener('sourceopen', function () {
+        audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
+        console.log("mediaSource has indicated that it is open! " + mediaSource.readyState);
+    });
+    audio.src = URL.createObjectURL(mediaSource);
 
 
     useEffect(() => {
+
         if (currentSong != -1) {
 
             setLoading(true);   // we start loading
@@ -39,9 +44,19 @@ function Player() {
             console.log("There will be " + totalSegments + " total segments.");
 
             // add a sourcebuffer for the new song
-            const audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');    // maybe need codecs
+            //const audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');    // maybe need codecs
 
-            for (let seg = 1; seg <= totalSegments; seg++) {
+            // looping over the amount of segments, starting at zero to avoid rounding issues - we should always expect to receive one not-full segment, meaning we always round up, or take 1 extra segment (the 0-indexed one).
+            var counter = 0;
+            for (let seg = 0; seg <= totalSegments; seg++) {
+
+                if (counter % 5 != 0) {
+                    counter += mediaSource.duration;
+                    console.log(counter);
+                    seg--;
+                    continue;
+                }
+
                 console.log("Now fetching segment: " + seg + " of song: " + title);
 
                 fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
@@ -51,7 +66,9 @@ function Player() {
                     .then(function (audioSegment) {
                         audioSourceBuffer.appendBuffer(audioSegment);       // !! NULLPOINTER WARNING !! -- audiosourcebuffer might be null if we are still loading while we switch songs
 
+                        console.log("Received this: " + audioSegment + " as segment " + seg);
                         if (seg == 1) {
+                            console.log("Begin playing");
                             audio.play();   // when we have received the first segment, start playing
                         }
 
@@ -59,8 +76,8 @@ function Player() {
                             setLoading(false);
                         }
                     });
-            }
 
+            }
 
         }
     }, [currentSong])
@@ -68,8 +85,6 @@ function Player() {
 
     return (
         <div className="wrapper">
-            <audio id="audio"></audio>
-
             <div className="albumart">
                 <img src={currentSong > 0 ? art : ""} height="75vh" />
             </div>
