@@ -73,6 +73,7 @@ app.get('/playSong', (req, res) => {
   if (req.query.song != loadedSong) {
     console.log("Now loading " + req.query.song);
     loadedSong = req.query.song;
+    songArray = [];
 
     const filePath = path.resolve(__dirname, './assets', './music', req.query.song + '.mp3');
 
