@@ -15,6 +15,8 @@ const conString = "postgresql://uzbxyxyi:j7b-g-qv6fw30KkL0dAkN1CMrPMg1sPs@balara
 
 
 const SEGMENT_SIZE = 200000;    // size of each segment sent of a song being streamed
+var loadedSong = "";
+var songArray = [];
 
 app.use('/assets', express.static('assets/images'));
 
@@ -68,25 +70,36 @@ app.get('/playSong', (req, res) => {
   console.log("Received request to stream this song: " + req.query.song);
   console.log("Requested segment is: " + req.query.segment);
 
-  const filePath = path.resolve(__dirname, './assets', './music', req.query.song + '.mp3');
-  const stat = fileSystem.statSync(filePath);   // we need the size to divide into segments in the same way as frontend
+  if (req.query.song != loadedSong) {
+    console.log("Now loading " + req.query.song);
+    loadedSong = req.query.song;
 
-  // 200 kb in each segment - like on frontend
-  const totalSegments = (stat.size / SEGMENT_SIZE) + 1;   // +1 to ensure we also send the last not-fully-sized segment
+    const filePath = path.resolve(__dirname, './assets', './music', req.query.song + '.mp3');
 
-  const readStream = fileSystem.createReadStream(filePath, { highWaterMark: SEGMENT_SIZE });   // is this the easiest way?
+    // not actually sure this is needed for anything???
+    const stat = fileSystem.statSync(filePath);   // we need the size to divide into segments in the same way as frontend
 
-  let counter = 0;
-  readStream.on('data', (chunk) => {
-    counter++;
-    if (counter == req.query.segment) {
-      console.log("Sending segment " + counter);
-      console.log("This segment is of length " + chunk.length);
-      res.status(200).send(chunk);
-      res.end();
+    var tempArray = [];
+    const fileContents = fileSystem.readFileSync(filePath);
+    tempArray.push(fileContents);
+
+    for (index = 0; index < stat.size; index += SEGMENT_SIZE) {
+      tmpSeg = fileContents.slice(index, index + SEGMENT_SIZE);
+
+      songArray.push(tmpSeg);
+      // should result in [ [1, 1, 1, 0 ... (for SEGMENT_SIZE)], [...], [...], ...]
     }
-  });
+    console.log("We are done loading the song!");
 
+    console.log("Sending segment of length: " + songArray[req.query.segment].length);
+    res.status(200).send(songArray[req.query.segment]);
+
+  } else {
+    console.log("Sending segment " + req.query.segment);
+    console.log("This segment is of length " + songArray[req.query.segment].length);
+    res.status(200).send(songArray[req.query.segment]);
+    res.end();
+  }
 });
 
 

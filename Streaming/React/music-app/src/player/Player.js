@@ -7,7 +7,7 @@ import { StreamingContext } from './StreamingContext';
 import { MUSIC_SERVER } from '../env_vars.js';
 
 function Player() {
-    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration, isLoading, setLoading] = useContext(StreamingContext);
+    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);
 
     // for finding data about the current song
     const songids = useSelector(state => state.songids);
@@ -37,7 +37,7 @@ function Player() {
             console.log("Created new mediasource! Containing these sourcebuffers: ");
             console.log(mediaSource.sourceBuffers);
 
-            setLoading(true);   // we start loading
+            var isLoading = true;   // we start loading
 
             // if there is already a song loading/playing, remove that sourcebuffer.
             if (mediaSource.activeSourceBuffers[0] != null) {
@@ -53,8 +53,8 @@ function Player() {
             //const audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');    // maybe need codecs
 
             // we should always expect to receive one not-full segment, meaning we always round up, or take 1 extra segment.
-            console.log("Now fetching the first segment of song: " + title);
-            var seg = 1;
+            console.log("Now fetching the first two segment of song: " + title);
+            var seg = 0;
             fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
                 .then(function (resp) {
                     return resp.arrayBuffer();
@@ -66,26 +66,40 @@ function Player() {
                     console.log("Begin playing!");
                     audio.play();   // when we have received the first segment, start playing
 
-                    // listening for updates to sourcebuffer, to load next segments continuously
-                    audio.addEventListener('progress', function () {
-                        console.log("We have received an onupdate event!");
-                        seg++;
-
-                        fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
-                            .then(function (resp) {
-                                return resp.arrayBuffer();
-                            })
-                            .then(function (audioSegment) {
-                                audioSourceBuffer.appendBuffer(audioSegment);
-                                console.log("Received this: " + audioSegment + " as segment " + seg);
-
-                                if (seg == totalSegments + 1) {     // if we have reached the final segment, we are done loading
-                                    setLoading(false);
-                                }
-                            });
-                    });
-                    console.log("Added eventListener!");
+                    seg++;
+                    fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
+                        .then(function (resp) {
+                            return resp.arrayBuffer();
+                        })
+                        .then(function (audioSegment) {
+                            audioSourceBuffer.appendBuffer(audioSegment);
+                            console.log("Received segment " + seg);
+                        });
                 });
+
+            // listening for updates, to load next segments continuously
+            audio.ontimeupdate = function (event) {
+                console.log("We have received an update event!");
+
+                if (isLoading && Math.round(audio.currentTime % 2) == 0) {
+                    console.log(audio.currentTime);
+                    seg++;
+
+                    fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
+                        .then(function (resp) {
+                            return resp.arrayBuffer();
+                        })
+                        .then(function (audioSegment) {
+                            audioSourceBuffer.appendBuffer(audioSegment);
+                            console.log("Received segment " + seg);
+
+                            if (seg == totalSegments + 1) {     // if we have reached the final segment, we are done loading
+                                isLoading = false;
+                            }
+                        });
+                }
+            };
+            console.log("Added eventListener!");
         }
     }, [currentSong])
 

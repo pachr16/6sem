@@ -6,7 +6,7 @@ import { StreamingContext } from './StreamingContext';
 
 
 function PlayPause() {
-    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration, isLoading, setLoading] = useContext(StreamingContext);
+    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);
 
     const audio = document.getElementById("audio");
 
@@ -21,12 +21,10 @@ function PlayPause() {
     }
 
 
-    //isPlaying ? (isLoading ? PlayPic : PlayPicGrey) : (isLoading ? PausePic : PausePicGrey)
-    // correct way: isPlaying ? isLoading ? PausePicGrey : PausePic : PlayPic
-
+    // isPlaying ? isLoading ? PausePicGrey : PausePic : PlayPic
     return (
         <div className="playPause">
-            <img src={isPlaying ? isLoading ? PausePicGrey : PausePic : PlayPic} height="50vh" width="40vh" onClick={playPauseClicked} alt="placeholder_text" />
+            <img src={isPlaying ? PausePic : PlayPic} height="50vh" width="40vh" onClick={playPauseClicked} alt="placeholder_text" />
         </div>
     );
 
