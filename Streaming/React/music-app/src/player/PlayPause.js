@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import PlayPic from '../assets/play.png';
 import PausePic from '../assets/pause.png';
-import PausePicGrey from '../assets/pause_grey.png';
 import { StreamingContext } from './StreamingContext';
 
 
-function PlayPause() {
-    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);
-
-    const audio = document.getElementById("audio");
+function PlayPause(props) {
+    const [isPlaying, setPlaying, currentSong, setSong] = useContext(StreamingContext);
+    const audio = props.audio;
 
     async function playPauseClicked() {
         setPlaying(!isPlaying);

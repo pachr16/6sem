@@ -5,7 +5,7 @@ import { StreamingContext } from '../../player/StreamingContext.js';
 
 /* for displaying the cards with info about each song, to be shown in an overview list */
 function SingleSong(props) {
-    const [isPlaying, setPlaying, currentSong, setSong] = useContext(StreamingContext);
+    const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious] = useContext(StreamingContext);
 
     const songid = useSelector(state => state.songids[props.val]);
     const art = useSelector(state => state.arts[props.val]);
@@ -17,6 +17,7 @@ function SingleSong(props) {
     function selectSong() {
         console.log("We have clicked/selected this song: " + title);
 
+        setPrevious(currentSong);
         setSong(songid);
         setPlaying(true);
 

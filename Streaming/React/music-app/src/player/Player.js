@@ -7,7 +7,7 @@ import { StreamingContext } from './StreamingContext';
 import { MUSIC_SERVER } from '../env_vars.js';
 
 function Player() {
-    const [isPlaying, setPlaying, currentSong, setSong, duration, setDuration] = useContext(StreamingContext);
+    const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource] = useContext(StreamingContext);
 
     // for finding data about the current song
     const songids = useSelector(state => state.songids);
@@ -22,19 +22,27 @@ function Player() {
 
     useEffect(() => {
         if (currentSong != -1) {
+            if (previousSong != -1) {
+                //mediaSource.removeSourceBuffer(mediaSource.sourceBuffers[0]);
+                //mediaSource.sourceBuffers[0].remove(0, mediaSource.sourceBuffers[0].buffered.end(0));
+                console.log("Creating new MediaSource!");
+                setMediaSource(new MediaSource());
+            }
 
-            var mediaSource = new MediaSource();
             audio.src = URL.createObjectURL(mediaSource);
+
             var audioSourceBuffer;
             mediaSource.addEventListener('sourceopen', function () {
                 console.log("Mediasource has indicated that it is open!");
                 if (mediaSource.sourceBuffers[0] == null) {
                     audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
                     console.log("mediaSource has added a new audiosourcebuffer! " + mediaSource.readyState);
+                    console.log("The added sourcebuffer is: " + audioSourceBuffer);
                 }
             });
 
-            console.log("Created new mediasource! Containing these sourcebuffers: ");
+            console.log("Mediasource is: " + mediaSource.toString());
+            console.log("It contains these sourcebuffers: ");
             console.log(mediaSource.sourceBuffers);
 
             var isLoading = true;   // we start loading
@@ -93,7 +101,8 @@ function Player() {
                             audioSourceBuffer.appendBuffer(audioSegment);
                             console.log("Received segment " + seg);
 
-                            if (seg == totalSegments + 1) {     // if we have reached the final segment, we are done loading
+                            if (seg == Math.floor(totalSegments)) {     // if we have reached the final segment, we are done loading
+                                console.log("We should be done loading now");
                                 isLoading = false;
                             }
                         });
@@ -111,7 +120,7 @@ function Player() {
             </div>
             <div className="player">
                 <Previous />
-                <PlayPause />
+                <PlayPause audio={audio} />
                 <Skip />
             </div>
             <div className="songdisplay">

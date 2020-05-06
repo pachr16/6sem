@@ -5,11 +5,11 @@ export const StreamingContext = createContext();
 export const StreamingInfoProvider = (props) => {
     const [isPlaying, setPlaying] = useState(false);
     const [currentSong, setSong] = useState(-1);
-    const [duration, setDuration] = useState(0);
-    
+    const [previousSong, setPrevious] = useState(-1);
+    const [mediaSource, setMediaSource] = useState(new MediaSource());
 
     return (
-        <StreamingContext.Provider value={[isPlaying, setPlaying, currentSong, setSong, duration, setDuration]}>
+        <StreamingContext.Provider value={[isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource]}>
             {props.children}
         </StreamingContext.Provider>
     );

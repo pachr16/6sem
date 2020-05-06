@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PreviousPic from '../assets/backward.png';
+import { StreamingContext } from './StreamingContext';
 
 function Previous() {
-    return(
-        <img src={PreviousPic} height="50vh" width="40vh" alt="previous_button"/>
+    const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious] = useContext(StreamingContext);
+
+    function previous() {
+        setSong(previousSong);
+    }
+
+    return (
+        <img src={PreviousPic} onClick={previous} height="50vh" width="40vh" alt="previous_button" />
     );
 }
 
