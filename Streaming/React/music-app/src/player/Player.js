@@ -30,6 +30,8 @@ function Player() {
     //used to deside if new segments shuld be fetched
     var isLoading = false;
 
+    var sBuffer = null
+
     useEffect(() => {
         if (currentSong != -1) {
             if (isPlaying) {
@@ -42,6 +44,7 @@ function Player() {
 
             mediaSource.sourceBuffers.addEventListener('addsourcebuffer', initSong());
 
+
             //set up listner for fetching more sing data
             createFetchOnAudioUpdate();
 
@@ -50,9 +53,10 @@ function Player() {
 
     function createSourcebuffer() {
         if (mediaSource.sourceBuffers[0] == null) {
-            var audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-            console.log("mediaSource has added a new audiosourcebuffer! " + mediaSource.readyState);
-            console.log("The added sourcebuffer is: " + audioSourceBuffer);
+            sBuffer = mediaSource.addSourceBuffer('audio/mpeg');
+            console.log("mediaSource has added a new audiosourcebuffer! ");
+            console.log(mediaSource);
+            console.log("The added sourcebuffer is: " + sBuffer);
 
         }
     }
@@ -73,10 +77,12 @@ function Player() {
                 return resp.arrayBuffer();
             })
             .then(function (audioSegment) {
-                mediaSource.sourceBuffers[0].appendBuffer(audioSegment);       // !! NULLPOINTER WARNING !! -- audiosourcebuffer might be null if we are still loading previous song
+                sBuffer.appendBuffer(audioSegment);       // !! NULLPOINTER WARNING !! -- audiosourcebuffer might be null if we are still loading previous song
 
                 console.log("Received segment " + lastFetchedsegment);
                 console.log("Begin playing!");
+                console.log('mediaSource before playing');
+                console.log(mediaSource);
                 audio.play();   // when we have received the first segment, start playing
                 setPlaying(true);
 
@@ -86,7 +92,7 @@ function Player() {
                         return resp.arrayBuffer();
                     })
                     .then(function (audioSegment) {
-                        mediaSource.sourceBuffers[0].appendBuffer(audioSegment);
+                        sBuffer.appendBuffer(audioSegment);
                         console.log("Received segment " + lastFetchedsegment);
                         isLoading = true;   // we start loading
                     });
@@ -107,7 +113,7 @@ function Player() {
                         return resp.arrayBuffer();
                     })
                     .then(function (audioSegment) {
-                        mediaSource.sourceBuffers[0].appendBuffer(audioSegment);
+                        sBuffer.appendBuffer(audioSegment);
                         console.log("Received segment " + lastFetchedsegment);
 
                         if (lastFetchedsegment == Math.floor(totalSegments)) {     // if we have reached the final segment, we are done loading
