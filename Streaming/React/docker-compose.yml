@@ -14,13 +14,14 @@ services:
              - NODE_ENV=development
         stdin_open: true
     serverproxy:
-        image: nginx
+        build: 
+            context: ./serverProxy
         ports:
             - "80:80"
             - "443:443"
         volumes:
             - ./serverProxy/default.conf:/etc/nginx/conf.d/default.conf:ro
-#            - ./test/html/:/usr/share/nginx/html/:ro
+           # - ./serverProxy/certs:/etc/nginx/certs
     loginserver:
         container_name: nodeLogin
         build:
