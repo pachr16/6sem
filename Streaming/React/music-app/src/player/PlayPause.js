@@ -13,8 +13,10 @@ function PlayPause(props) {
 
         if (audio.paused) {
             audio.play();
+            setPlaying(true);
         } else {
-            audio.pause();
+            audio.pause()
+            setPlaying(false);
         }
     }
 
