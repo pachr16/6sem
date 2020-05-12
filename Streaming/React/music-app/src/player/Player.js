@@ -11,47 +11,35 @@ function Player() {
 
     // for finding data about the current song:
     const songids = useSelector(state => state.songids);
-    console.log(songids);
     const index = songids.indexOf(currentSong);
     const title = useSelector(state => state.titles[index]);
     const art = useSelector(state => state.arts[index]);
     const song_url = useSelector(state => state.song_urls[index]);
     const size = useSelector(state => state.sizes[index]);
+    const duration = useSelector(state => state.songDurations[index]);
 
 
     useEffect(() => {
-        if (currentSong != -1) {
-            console.log("Now playing: " + currentSong);
-            console.log("Looking for: " + index);
-
-            console.log("Creating new MediaSource!");
+        if (currentSong > 0) {
+            console.log("Playing " + title + ", id: " + currentSong);
             setMediaSource(new MediaSource());
 
             audio.src = URL.createObjectURL(mediaSource);
 
             var audioSourceBuffer;
             mediaSource.addEventListener('sourceopen', function () {
-                console.log("Mediasource has indicated that it is open!");
                 if (mediaSource.sourceBuffers[0] == null) {
                     audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-                    console.log("mediaSource has added a new audiosourcebuffer!");
-                    console.log("The added sourcebuffer is: " + audioSourceBuffer);
                 }
             });
-
-            console.log("Mediasource is: " + mediaSource.toString());
-            console.log("It contains these sourcebuffers: ");
-            console.log(mediaSource.sourceBuffers);
 
             var isLoading = true;   // we start loading
 
             // determine number of segments
             var totalSegments = size / 200000;    // segments of 200 kb each
-            console.log("There will be " + totalSegments + " segments.");
             var seg = 0;
 
             // we should always expect to receive one not-full segment
-            console.log("Now fetching the first four segments of song: " + title);
             fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
                 .then(function (resp) {
                     return resp.arrayBuffer();
@@ -60,7 +48,6 @@ function Player() {
                     audioSourceBuffer.appendBuffer(audioSegment);
 
                     console.log("Received segment " + seg);
-                    console.log("Begin playing!");
                     audio.play();   // when we have received the first segment, start playing
                     setPlaying(true);
 
@@ -99,8 +86,6 @@ function Player() {
 
             // listening for updates, to load next segments continuously
             audio.ontimeupdate = function (event) {
-                console.log("We have received an update event!");
-
                 if (isLoading && Math.round(audio.currentTime % 2) == 0) {
                     seg++;
 
@@ -113,10 +98,14 @@ function Player() {
                             console.log("Received segment " + seg);
 
                             if (seg == Math.floor(totalSegments)) {     // if we have reached the final segment, we are done loading
-                                console.log("We should be done loading now");
+                                console.log("Done loading!");
                                 isLoading = false;
                             }
                         });
+                } else if (audio.currentTime > (duration - 0.5)) {
+                    console.log("Done listening!");
+                    var next = (parseInt(currentSong) % songids.length) + 1;
+                    setSong(next.toString());
                 }
             };
         }

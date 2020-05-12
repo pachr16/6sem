@@ -8,14 +8,16 @@ function PlayPause() {
     const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource, audio, setAudio] = useContext(StreamingContext);
 
     async function playPauseClicked() {
-        setPlaying(!isPlaying);
+        if (currentSong > 0) {
+            setPlaying(!isPlaying);
 
-        if (audio.paused) {
-            audio.play();
-            setPlaying(true);
-        } else {
-            audio.pause()
-            setPlaying(false);
+            if (audio.paused) {
+                audio.play();
+                setPlaying(true);
+            } else {
+                audio.pause()
+                setPlaying(false);
+            }
         }
     }
 

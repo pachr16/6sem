@@ -10,10 +10,7 @@ function Skip() {
 
     function skip() {
         setPrevious(currentSong);
-
-        var next = 1 + Math.floor(Math.random() * (songids.length-1));
-
-        console.log("Skip calculated this id: " + next);
+        var next = (parseInt(currentSong) % songids.length) + 1;
         setSong(next.toString());
     }
 

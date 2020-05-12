@@ -5,13 +5,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logOut } from '../redux/actions';
 
 
-//https://codepen.io/Scotho/pen/ygjOPj
+//https://codepen.io/Scotho/pen/ygjOPj  source for dropbown stuff
 function NavLinks() {
     const loggedID = useSelector(state => state.loggedID);
     const dispatch = useDispatch();
 
     function onClickLogOut() {
-        dispatch(logOut());
+        // dispatch(logOut());              // not needed, because the line below resets the state completely
+        window.location.pathname = "/";     // redirects to homepage and resets everything stored in state
     }
 
     function logIn() {
