@@ -32,7 +32,7 @@ function Homepage() {
 function insertData(data){
   data.forEach(info => {
 
-    console.log("Loaded this song: " + info.title);
+    console.log("Loaded this song: " + info.title + info.songid);
 
     dispatch(addSongid(info.songid));
     dispatch(addTitle(info.title));

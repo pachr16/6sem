@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 function SongOverview() {
     const songids = useSelector(state => state.songids);
 
-    const newSongcards = songids.map((url, index) => (<SingleSong key={url} val={index}/>));
+    const newSongcards = songids.map((id, index) => (<SingleSong key={id} val={index}/>));
 
     return (
         <div>

@@ -7,7 +7,7 @@ import { StreamingContext } from './StreamingContext';
 import { MUSIC_SERVER } from '../env_vars.js';
 
 function Player() {
-    const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource] = useContext(StreamingContext);
+    const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource, audio, setAudio] = useContext(StreamingContext);
 
     // for finding data about the current song: , mediaSource, setMediaSource
     const songids = useSelector(state => state.songids);
@@ -17,24 +17,11 @@ function Player() {
     const song_url = useSelector(state => state.song_urls[index]);
     const size = useSelector(state => state.sizes[index]);
 
-    // setup audio
-    const audio = document.createElement('audio');
-
-    var totalSegments = 0;
-    var seg = 0;
 
     useEffect(() => {
         if (currentSong != -1) {
-            if (isPlaying) {
-                //mediaSource.removeSourceBuffer(mediaSource.sourceBuffers[0]);
-                //mediaSource.sourceBuffers[0].remove(0, mediaSource.sourceBuffers[0].buffered.end(0));
-                //console.log("Creating new MediaSource!");
-                //setMediaSource(new MediaSource());
-                audio.pause();
-                setPlaying(false);
-                // clear old mediasource somehow!
-            }
-
+            console.log("Creating new MediaSource!");
+            setMediaSource(new MediaSource());
 
             audio.src = URL.createObjectURL(mediaSource);
 
@@ -43,7 +30,7 @@ function Player() {
                 console.log("Mediasource has indicated that it is open!");
                 if (mediaSource.sourceBuffers[0] == null) {
                     audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-                    console.log("mediaSource has added a new audiosourcebuffer! " + mediaSource.readyState);
+                    console.log("mediaSource has added a new audiosourcebuffer!");
                     console.log("The added sourcebuffer is: " + audioSourceBuffer);
                 }
             });
@@ -54,53 +41,41 @@ function Player() {
 
             var isLoading = true;   // we start loading
 
-            // if there is already a song loading/playing, remove that sourcebuffer.
-            if (mediaSource.activeSourceBuffers[0] != null) {
-                console.log("Removing current audiosourcebuffer to start new song");
-                mediaSource.removeSourceBuffer(mediaSource.activeSourceBuffers[0]);     // removes sourcebuffer from list, but if it still exists it's a problem - still holding the data?
-            }
+            // determine number of segments
+            var totalSegments = size / 200000;    // segments of 200 kb each
+            console.log("There will be " + totalSegments + " segments.");
+            var seg = 0;
 
-            mediaSource.sourceBuffers.onaddsourcebuffer = function (event) {
-                // determine number of segments
-                totalSegments = size / 200000;    // segments of 200 kb each
-                console.log("There will be " + totalSegments + " total segments.");
+            // we should always expect to receive one not-full segment
+            console.log("Now fetching the first two segments of song: " + title);
+            fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
+                .then(function (resp) {
+                    return resp.arrayBuffer();
+                })
+                .then(function (audioSegment) {
+                    audioSourceBuffer.appendBuffer(audioSegment);
 
-                // add a sourcebuffer for the new song
-                //const audioSourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');    // maybe need codecs
+                    console.log("Received segment " + seg);
+                    console.log("Begin playing!");
+                    audio.play();   // when we have received the first segment, start playing
+                    setPlaying(true);
 
-                // we should always expect to receive one not-full segment, meaning we always round up, or take 1 extra segment.
-                console.log("Now fetching the first two segment of song: " + title);
-                seg = 0;
-                fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
-                    .then(function (resp) {
-                        return resp.arrayBuffer();
-                    })
-                    .then(function (audioSegment) {
-                        audioSourceBuffer.appendBuffer(audioSegment);       // !! NULLPOINTER WARNING !! -- audiosourcebuffer might be null if we are still loading previous song
-
-                        console.log("Received segment " + seg);
-                        console.log("Begin playing!");
-                        audio.play();   // when we have received the first segment, start playing
-                        setPlaying(true);
-
-                        seg++;
-                        fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
-                            .then(function (resp) {
-                                return resp.arrayBuffer();
-                            })
-                            .then(function (audioSegment) {
-                                audioSourceBuffer.appendBuffer(audioSegment);
-                                console.log("Received segment " + seg);
-                            });
-                    });
-            }
+                    seg++;
+                    fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
+                        .then(function (resp) {
+                            return resp.arrayBuffer();
+                        })
+                        .then(function (audioSegment) {
+                            audioSourceBuffer.appendBuffer(audioSegment);
+                            console.log("Received segment " + seg);
+                        });
+                });
 
             // listening for updates, to load next segments continuously
             audio.ontimeupdate = function (event) {
                 console.log("We have received an update event!");
 
                 if (isLoading && Math.round(audio.currentTime % 2) == 0) {
-                    console.log(audio.currentTime);
                     seg++;
 
                     fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
@@ -118,7 +93,6 @@ function Player() {
                         });
                 }
             };
-            console.log("Added eventListener!");
         }
     }, [currentSong])
 

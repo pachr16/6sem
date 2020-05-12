@@ -4,9 +4,8 @@ import PausePic from '../assets/pause.png';
 import { StreamingContext } from './StreamingContext';
 
 
-function PlayPause(props) {
-    const [isPlaying, setPlaying, currentSong, setSong] = useContext(StreamingContext);
-    const audio = props.audio;
+function PlayPause() {
+    const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource, audio, setAudio] = useContext(StreamingContext);
 
     async function playPauseClicked() {
         setPlaying(!isPlaying);

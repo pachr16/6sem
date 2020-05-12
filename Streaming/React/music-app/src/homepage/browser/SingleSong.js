@@ -15,7 +15,7 @@ function SingleSong(props) {
     const songDuration = useSelector(state => state.songDurations[props.val]);
 
     function selectSong() {
-        console.log("We have clicked/selected this song: " + title);
+        console.log("We have clicked/selected this song: " + title + ", id: " + songid);
 
         setPrevious(currentSong);
         setSong(songid);
