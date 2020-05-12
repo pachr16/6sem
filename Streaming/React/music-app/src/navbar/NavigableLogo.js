@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from './placeholder_logo.jpg';
+import logo from '../assets/placeholder_logo.jpg';
 
 function NavigableLogo() {
     return (
