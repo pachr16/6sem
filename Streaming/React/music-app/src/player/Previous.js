@@ -6,7 +6,10 @@ function Previous() {
     const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious] = useContext(StreamingContext);
 
     function previous() {
+        var temp = currentSong;
+        
         setSong(previousSong);
+        setPrevious(currentSong);
     }
 
     return (

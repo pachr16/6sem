@@ -31,9 +31,6 @@ function Homepage() {
 
 function insertData(data){
   data.forEach(info => {
-
-    console.log("Loaded this song: " + info.title + info.songid);
-
     dispatch(addSongid(info.songid));
     dispatch(addTitle(info.title));
     dispatch(addSongDur(info.duration));
@@ -44,31 +41,6 @@ function insertData(data){
     dispatch(addArt(`${MUSIC_SERVER}/assets/${info.image_url}`));
   });
 }
-
-
-//   const url = "http://localhost:2000";
-//   const socket = socketClient.connect(url);
-
-//   ss(socket).emit('getMetaData', 'thisdoesntmatter', () => {
-//     console.log("We've requested metadata!");
-//   });
-
-//   ss(socket).on('metadata', (info) => {
-//     console.log("Loaded this song: " + info.buffer.title);
-
-//     dispatch(addSongid(info.buffer.songid));
-//     dispatch(addTitle(info.buffer.title));
-//     dispatch(addSongDur(info.buffer.duration));
-//     dispatch(addSong_url(info.buffer.song_url));
-//     dispatch(addSize(info.buffer.size));
-//     dispatch(addAlbum(info.buffer.album));
-//     dispatch(addArtist(info.buffer.artist));
-//     // setting the album art requires some formatting stuff
-//     var tempImage = new Image();
-//     tempImage.src = 'data:image/png;base64,' + info.buffer.image;
-//     dispatch(addArt(tempImage.src));
-//   });
-// }
 
 function requireAuth(destination) {
   if (loggedID == -1) {

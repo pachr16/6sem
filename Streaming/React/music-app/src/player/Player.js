@@ -9,8 +9,9 @@ import { MUSIC_SERVER } from '../env_vars.js';
 function Player() {
     const [isPlaying, setPlaying, currentSong, setSong, previousSong, setPrevious, mediaSource, setMediaSource, audio, setAudio] = useContext(StreamingContext);
 
-    // for finding data about the current song: , mediaSource, setMediaSource
+    // for finding data about the current song:
     const songids = useSelector(state => state.songids);
+    console.log(songids);
     const index = songids.indexOf(currentSong);
     const title = useSelector(state => state.titles[index]);
     const art = useSelector(state => state.arts[index]);
@@ -20,6 +21,9 @@ function Player() {
 
     useEffect(() => {
         if (currentSong != -1) {
+            console.log("Now playing: " + currentSong);
+            console.log("Looking for: " + index);
+
             console.log("Creating new MediaSource!");
             setMediaSource(new MediaSource());
 
@@ -47,7 +51,7 @@ function Player() {
             var seg = 0;
 
             // we should always expect to receive one not-full segment
-            console.log("Now fetching the first two segments of song: " + title);
+            console.log("Now fetching the first four segments of song: " + title);
             fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
                 .then(function (resp) {
                     return resp.arrayBuffer();
@@ -68,6 +72,28 @@ function Player() {
                         .then(function (audioSegment) {
                             audioSourceBuffer.appendBuffer(audioSegment);
                             console.log("Received segment " + seg);
+
+
+                            // loading two additional initial segments because metadata can be a lot
+                            seg++;
+                            fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
+                                .then(function (resp) {
+                                    return resp.arrayBuffer();
+                                })
+                                .then(function (audioSegment) {
+                                    audioSourceBuffer.appendBuffer(audioSegment);
+                                    console.log("Received segment " + seg);
+
+                                    seg++;
+                                    fetch(`${MUSIC_SERVER}/playSong?song=${song_url}&segment=${seg}`)
+                                        .then(function (resp) {
+                                            return resp.arrayBuffer();
+                                        })
+                                        .then(function (audioSegment) {
+                                            audioSourceBuffer.appendBuffer(audioSegment);
+                                            console.log("Received segment " + seg);
+                                        });
+                                });
                         });
                 });
 
@@ -100,7 +126,7 @@ function Player() {
     return (
         <div className="wrapper">
             <div className="albumart">
-                <img src={currentSong > 0 ? art : ""} height="75vh" />
+                <img src={currentSong > -1 ? art : ""} height="75vh" />
             </div>
             <div className="player">
                 <Previous />
