@@ -10,29 +10,38 @@ function Login() {
 
     // called when clicking the login-button to enter the service
     const loginButton = async () => {
-        
-        // call server and check credentials
-        let resp = await fetch(`${LOGIN_SERVER}/checkCred?email=${document.getElementById("emailField").value}&password=${document.getElementById('passwordField').value}`,
-            {
-                credentials: 'same-origin'
-            });
-        let respID = await resp.text();
 
+        if (document.getElementById('emailField').value === "" ||
+            document.getElementById('passwordField').value === "") {
 
-        if (resp.status === 200) {
-            dispatch(logIn(respID));
-            return;     // correct react component will render automatically - login was just rendered in front while not authorized
+            document.getElementById('warnText').innerHTML = "Please fill in all fields!";
 
-        } else if (resp.status === 404) {
-            document.getElementById("warnText").innerHTML = "That email does not match any users in the system!";
+        } else {
+            try {
+                // call server and check credentials
+                let resp = await fetch(`${LOGIN_SERVER}/checkCred?email=${document.getElementById("emailField").value}&password=${document.getElementById('passwordField').value}`,
+                    {
+                        credentials: 'same-origin'
+                    });
+                let respID = await resp.text();
 
-        } else if (resp.status === 401) {
-            document.getElementById("warnText").innerHTML = "Login failed! (Probably due to wrong password, the email exists)";
+                if (resp.status === 200) {
+                    dispatch(logIn(respID));
+                    return;     // correct react component will render automatically - login was just rendered in front while not authorized
+                } else if (resp.status === 404) {
+                    document.getElementById("warnText").innerHTML = "That email does not match any users in the system!";
+                } else if (resp.status === 401) {
+                    document.getElementById("warnText").innerHTML = "Login failed! (Probably due to wrong password, the email exists)";
+                }
+                // clearing textfields
+                document.getElementById("emailField").value = "";
+                document.getElementById("passwordField").value = "";
 
+            } catch (error) {
+                console.log(error);
+                document.getElementById("warnText").innerHTML = "Service is currently unavailable. Please try again later.";
+            }
         }
-        // clearing textfields
-        document.getElementById("emailField").value = "";
-        document.getElementById("passwordField").value = "";
     }
 
     return (

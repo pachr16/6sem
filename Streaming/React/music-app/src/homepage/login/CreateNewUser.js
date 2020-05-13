@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LOGIN_SERVER } from '../../env_vars.js';
 
 
-function createUser() {
+async function createUser() {
 
     if (document.getElementById('emailField').value === "" ||
         document.getElementById('passField').value === "") {
@@ -11,22 +11,32 @@ function createUser() {
         document.getElementById('responseText').innerHTML = "Please fill in all fields!";
 
     } else {
-        fetch(`${LOGIN_SERVER}/newUser?email=${document.getElementById("emailField").value}&password=${document.getElementById("passField").value}`,
-            {
-                method: 'POST',
-                credentials: 'same-origin'
-            }).then(resp => {
-                if (resp.status === 200) {
-                    document.getElementById('responseText').style.color = "black";
-                    document.getElementById('responseText').innerHTML = "User has been registered! You can now go back to login.";
-                }
-                else {
-                    document.getElementById('responseText').innerHTML = "Error! I think that email already exists in the system!";
-                }
-            });
+        try {
+            let resp = await fetch(`${LOGIN_SERVER}/newUser?email=${document.getElementById("emailField").value}&password=${document.getElementById("passField").value}`,
+                {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+            let status = await resp.status;
 
-        document.getElementById('emailField').value = "";
-        document.getElementById('passField').value = "";
+            if (status === 200) {
+                document.getElementById('responseText').style.color = "black";
+                document.getElementById('responseText').innerHTML = "User has been registered! You can now go back to login.";
+            }
+            else {
+                document.getElementById('responseText').style.color = "red";
+                document.getElementById('responseText').innerHTML = "Error! I think that email already exists in the system!";
+            }
+
+
+            document.getElementById('emailField').value = "";
+            document.getElementById('passField').value = "";
+
+        } catch (error) {
+            console.log(error);
+            document.getElementById('responseText').style.color = "red";
+            document.getElementById('responseText').innerHTML = "Service is currently unavailable. Please try again later.";
+        }
     }
 }
 
