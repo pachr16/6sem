@@ -65,7 +65,7 @@ server.get('/checkCred', (req, res) => {
 server.post('/newUser', (req, res) => {
     const db = new pg.Client(conString);
 
-    let hashedPass = crypto.createHmac('sha256', req.query.password).digest('hex');
+    let hashedPass = crypto.createHmac('sha256', req.query.password).update("ThisIsAnExampleOfSalt").digest('hex');
     let newUser = new User(undefined, (req.query.email).toLowerCase(), hashedPass); //users.find(u => u.email == req.query.email);
 
     db.connect(function (err) {
